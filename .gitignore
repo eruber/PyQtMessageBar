@@ -8,7 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+#build/
 develop-eggs/
 dist/
 downloads/
@@ -69,7 +69,9 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/build/doctrees
+docs/build/html/.buildinfo
+docs/build/html/objects.inv
 
 # PyBuilder
 target/
@@ -96,7 +98,6 @@ __pypackages__/
 
 # Celery stuff
 celerybeat-schedule
-celerybeat.pid
 
 # SageMath parsed files
 *.sage.py
@@ -109,6 +110,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*_VENV/
+start_*.bat
+stop_*.bat
 
 # Spyder project settings
 .spyderproject

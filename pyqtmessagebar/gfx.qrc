@@ -1,0 +1,28 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>gfx/PyQtMessageBar_Components_feathered.png</file>
+    <file>gfx/baseline_help_black_24dp.png</file>
+    <file>gfx/baseline_help_outline_24dp.png</file>
+    <file>gfx/baseline_help_twotone_24dp.png</file>
+</qresource>
+</RCC>
+
+<!-- 
+See: https://doc.qt.io/archives/qt-4.8/resources.html
+
+This file is beside the gfx/ directory in the file system.
+
+To use this file (gfx.qrc) and the gfx/* files it references to create
+a python module containing the gfx/* files binary data do:
+
+	pyrcc5 gfx.qrc -o qtresources.py
+
+The pyrcc5 tool is part of the PyQt5 installation.
+
+The python module, qtresources.py, is generated and imported
+into any module needed to reference file and use this syntax
+wherever an image file name is required:
+
+	':/gfx/PyQtMessageBar_Components_feathered.png'
+
+-->

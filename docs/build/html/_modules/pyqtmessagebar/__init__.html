@@ -1,0 +1,1073 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyqtmessagebar.__init__ &mdash; PyQtMessageBar 0.5.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PyQtMessageBar
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyQtMessageBar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyqtmessagebar.__init__</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyqtmessagebar.__init__</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: pyqtmessagebar</span>
+
+<span class="sd">.. moduleauthor: E.R. Uber &lt;eruber@gmail.com&gt;</span>
+
+<span class="sd">**PyQtMessageBar**</span>
+
+<span class="sd">This messagebar subclasses the standard Qt Statusbar to implement a custom </span>
+<span class="sd">statusbar with the following capabilities:</span>
+<span class="sd">	</span>
+<span class="sd">	* Buffers StatusBar messages &amp; supports keyboard input to scroll through</span>
+<span class="sd">	  the buffered messages</span>
+<span class="sd">	* Qt.Key_Up</span>
+<span class="sd">	* Qt.Key_Home</span>
+<span class="sd">	* Qt.Key_Down</span>
+<span class="sd">	* Qt.Key_End</span>
+<span class="sd">	* Qt.Key_PageUp</span>
+<span class="sd">	* Qt.Key_PageDown</span>
+<span class="sd">	* Deletion of individual messages</span>
+<span class="sd">	* Deletion of entire message buffer</span>
+<span class="sd">	* Saving message buffer to a file</span>
+<span class="sd">	* Multiple messages with timeouts are placed on a wait queue</span>
+
+<span class="sd">In Qt, only the QWidget::setFocusPolicy() function affects click-to-focus.</span>
+
+<span class="sd">LOGGING</span>
+<span class="sd">-------</span>
+<span class="sd">This module creates a logging handler named &#39;PyQtMessageBar&#39; and always</span>
+<span class="sd">configures a Null handler.</span>
+<span class="sd">See `Configuring Logging for a Library &lt;https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library&gt;`_.</span>
+
+<span class="sd">REFERENCES</span>
+<span class="sd">----------</span>
+<span class="sd">The following Qt references proved helpful:</span>
+
+<span class="sd">	* `Qt StatusBar &lt;https://doc.qt.io/qt-5/qstatusbar.html&gt;`_</span>
+<span class="sd">	* `Qt Keyboard Enumerations &lt;https://doc.qt.io/qt-5/qt.html#Key-enum&gt;`_</span>
+
+
+<span class="sd">LICENSE GPL</span>
+<span class="sd">-----------</span>
+<span class="sd">This file is part of **PyQtMessageBar**.</span>
+
+<span class="sd">PyQtMessageBar is free software: you can redistribute it and/or modify</span>
+<span class="sd">it under the terms of the GNU General Public License as published by</span>
+<span class="sd">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">(at your option) any later version.</span>
+
+<span class="sd">PyQtMessageBar is distributed in the hope that it will be useful,</span>
+<span class="sd">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License</span>
+<span class="sd">along with PyQtMessageBar in the file named LICENSE_GPL. If not, </span>
+<span class="sd">see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">COPYRIGHT (C) 2020 E.R. Uber (eruber@gmail.com)</span>
+
+<span class="sd">Class PyQtMessageBar</span>
+<span class="sd">--------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># ------------------------ Python Standard Library ---------------------------</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">queue</span>  <span class="c1"># This is a First-In-First-Out Queue</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------- Third Party Packages ----------------------------</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="kn">from</span> <span class="nn">PyQt5.Qt</span> <span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QEvent</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QByteArray</span><span class="p">,</span> <span class="n">QFileInfo</span><span class="p">,</span> <span class="n">QTimer</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPixmap</span><span class="p">,</span> <span class="n">QFont</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">QStatusBar</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QSizePolicy</span><span class="p">,</span>
+	<span class="n">QFileIconProvider</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> 
+	<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">colour</span> <span class="kn">import</span> <span class="n">Color</span>
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------- Application Packages ----------------------------</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="kn">from</span> <span class="nn">pyqtlineeditprogressbar</span> <span class="kn">import</span> <span class="n">PyQtLineEditProgressBar</span>
+<span class="kn">import</span> <span class="nn">pyqtlineeditprogressbar</span> <span class="k">as</span> <span class="nn">PYQTPROGBAR</span>
+<span class="kn">from</span> <span class="nn">pyqtmessagebar.aboutdialog</span> <span class="kn">import</span> <span class="n">AboutDialog</span>
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># ----------------------- Module Global &amp; Constants --------------------------</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># --------------------- Module Classes &amp; Functions ---------------------------</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="n">DEFAULT_BUFFER_SIZE</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Message Queue can never get smaller than this</span>
+<span class="n">DEFAULT_PAGE_SIZE</span>   <span class="o">=</span> <span class="mi">10</span>   <span class="c1"># As used by Key_PageUp and Key_PageDown</span>
+
+<span class="n">DEFAULT_BG_COLOR_QUEUED_MSGS_WAITING</span> <span class="o">=</span> <span class="s1">&#39;rgba(170,255,255,255)&#39;</span>
+
+<span class="c1">#https://doc.qt.io/qt-5/qt.html#Key-enum</span>
+<span class="n">KEY_MOVE</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_Up</span><span class="p">,</span>         <span class="c1"># -1 Entry</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_Down</span><span class="p">,</span>       <span class="c1"># +1 Entry</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_Home</span><span class="p">,</span>       <span class="c1"># 0th Entry</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_End</span><span class="p">,</span>        <span class="c1"># Max Entry</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_PageUp</span><span class="p">,</span>     <span class="c1"># -pagesize Entries</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_PageDown</span><span class="p">,</span>   <span class="c1"># +pagesize Entries</span>
+<span class="p">]</span>
+
+<span class="n">KEY_CMDS</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_X</span><span class="p">,</span>          <span class="c1"># Delete current message, +ALT delete all messages</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_S</span><span class="p">,</span>          <span class="c1"># +ALT Save queue to file</span>
+	<span class="n">Qt</span><span class="o">.</span><span class="n">Key_L</span><span class="p">,</span>          <span class="c1"># +ALT Load queue from file	</span>
+<span class="p">]</span>
+
+<span class="n">KEY_MAP</span> <span class="o">=</span> <span class="n">KEY_MOVE</span> <span class="o">+</span> <span class="n">KEY_CMDS</span>
+
+<span class="n">BUILT_IN_HELP_ICON_LIGHT</span> <span class="o">=</span> <span class="s1">&#39;Light&#39;</span>
+<span class="n">BUILT_IN_HELP_ICON_DARK</span> <span class="o">=</span> <span class="s1">&#39;Dark&#39;</span>
+<span class="n">BUILT_IN_HELP_ICON_TWO_TONE</span> <span class="o">=</span> <span class="s1">&#39;Two&#39;</span>
+
+<span class="n">HELP_ICON_INDICATORS</span> <span class="o">=</span> <span class="p">[</span><span class="n">BUILT_IN_HELP_ICON_LIGHT</span><span class="p">,</span> <span class="n">BUILT_IN_HELP_ICON_DARK</span><span class="p">,</span> <span class="n">BUILT_IN_HELP_ICON_TWO_TONE</span><span class="p">]</span>
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VLine"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.VLine">[docs]</a><span class="k">class</span> <span class="nc">VLine</span><span class="p">(</span><span class="n">QFrame</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;A simple VLine, like the one you get from Qt Designer.</span>
+<span class="sd">	See `How to Add Separator to StatusBar &lt;https://www.geeksforgeeks.org/pyqt5-how-to-add-separator-in-status-bar/&gt;`_.</span>
+<span class="sd">	</span>
+<span class="sd">	This class is used when the **PyQtMessageBar** constructor parameter **enable_separators** is set True.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="VLine.__init__"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.VLine.__init__">[docs]</a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Intializes a simple Vertical Line object that subclasses QFrame.&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">VLine</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setFrameShape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VLine</span><span class="o">|</span><span class="bp">self</span><span class="o">.</span><span class="n">Sunken</span><span class="p">)</span></div></div>
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># https://doc.qt.io/qt-5/qstatusbar.html</span>
+<div class="viewcode-block" id="PyQtMessageBar"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar">[docs]</a><span class="k">class</span> <span class="nc">PyQtMessageBar</span><span class="p">(</span><span class="n">QStatusBar</span><span class="p">):</span>
+	
+<div class="viewcode-block" id="PyQtMessageBar.__init__"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.__init__">[docs]</a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+					<span class="n">msg_buffer_size</span><span class="o">=</span><span class="n">DEFAULT_BUFFER_SIZE</span><span class="p">,</span> 
+					<span class="n">enable_separators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+					<span class="n">help_icon_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+					<span class="n">built_in_help_icon</span><span class="o">=</span><span class="n">BUILT_IN_HELP_ICON_LIGHT</span><span class="p">,</span>
+					<span class="n">parent_logger_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+					<span class="n">save_msg_buffer_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+					 <span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Constructor for the **PyQtMessageBar** class which subclasses QStatusBar.</span>
+
+<span class="sd">		It adds a buffered message index which includes a wait queue depth and it</span>
+<span class="sd">		adds a messagebar help icon.</span>
+
+<span class="sd">		.. image:: _static/components.png</span>
+<span class="sd">		   :align: center</span>
+
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		parent : qtwidget, optional</span>
+<span class="sd">			Reference to this widget&#39;s parent widget</span>
+<span class="sd">		msg_buffer_size : int, optional</span>
+<span class="sd">			The number of messages to buffer before removing the oldest</span>
+<span class="sd">		enable_separators : bool, optional</span>
+<span class="sd">			If True, any addPermanentWidget() calls will include a </span>
+<span class="sd">			vertical separator to the left of the widget added.</span>
+<span class="sd">		help_icon_file : str, optional</span>
+<span class="sd">			If specified, this file should be a 24x24 pixel image file</span>
+<span class="sd">			to be used to replace the built-in help icon image. If specified,</span>
+<span class="sd">			this icon will have prescedence over any built-in icon.</span>
+<span class="sd">		built_in_help_icon : str, optional</span>
+<span class="sd">			This is a string constant that can be one of three values &#39;Light&#39;, &#39;Dark&#39;, &#39;Two&#39;.</span>
+<span class="sd">			Use the module constants BUILT_IN_HELP_ICON_LIGHT, BUILT_IN_HELP_ICON_DARK, or</span>
+<span class="sd">			BUILT_IN_HELP_ICON_TWO_TONE.</span>
+<span class="sd">		parent_logger_name : str, optional</span>
+<span class="sd">			If specified, this logger will be used to enable logging; otherwise,</span>
+<span class="sd">			all log calls will go to the Null Handler.</span>
+<span class="sd">		save_msg_buffer_dir : str, optional</span>
+<span class="sd">			A directory where any saved message buffers will be written to.</span>
+<span class="sd">			If specified as None, then saving the message buffer will be</span>
+<span class="sd">			disabled.</span>
+
+
+<span class="sd">		.. figure:: _static/help_icons.png</span>
+<span class="sd">		   :align: center</span>
+<span class="sd">		   </span>
+<span class="sd">		   The Built-in Help Icons: Light, Dark, Two-Tone</span>
+
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">PyQtMessageBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+
+		<span class="c1"># Constructor Parameters</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_parent</span>              <span class="o">=</span> <span class="n">parent</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span>         <span class="o">=</span> <span class="n">msg_buffer_size</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_enable_separators</span>   <span class="o">=</span> <span class="n">enable_separators</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_help_icon_file</span>      <span class="o">=</span> <span class="n">help_icon_file</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_built_in_help_icon</span>  <span class="o">=</span> <span class="n">built_in_help_icon</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_parent_loggger_name</span> <span class="o">=</span> <span class="n">parent_logger_name</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_save_msg_buffer_dir</span> <span class="o">=</span> <span class="n">save_msg_buffer_dir</span>
+
+		<span class="c1"># Initializing internal data</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent_loggger_name</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent_loggger_name</span> <span class="o">+</span> <span class="s1">&#39;.PyQtMessageBar&#39;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;PyQtMessageBar&#39;</span><span class="p">)</span>
+			<span class="c1"># This should keep any PyQtMessageBar logging events of warning or above</span>
+			<span class="c1"># from being output to stderr if the application using this module</span>
+			<span class="c1"># provides no logging support.</span>
+			<span class="c1"># See: https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>	
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_field_width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">))</span>
+		<span class="n">format_1</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="s2">&quot;0:0</span><span class="si">{}</span><span class="s2">d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field_width</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
+		<span class="n">format_2</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="s2">&quot;1:0</span><span class="si">{}</span><span class="s2">d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field_width</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
+		<span class="n">format_3</span> <span class="o">=</span> <span class="s2">&quot; [</span><span class="si">{2:1d}</span><span class="s2">]&quot;</span> 
+		<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx_format</span> <span class="o">=</span> <span class="n">format_1</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">format_2</span> <span class="o">+</span> <span class="n">format_3</span>	
+		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Msg Index Format Spec: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx_format</span><span class="p">))</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>     <span class="c1"># _bufferd_msgs is empty</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span>     <span class="o">=</span> <span class="n">DEFAULT_PAGE_SIZE</span>
+
+		<span class="c1"># A _bufferd_msgs entry consists of: (msg, timeout, fg, bg, bold, enqueue_time)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span>    <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+		
+		<span class="c1"># We use a single timer, so messages that would generate overlapping timers are put on a wait queue</span>
+		<span class="c1"># until this currently displayed message timer fires.</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>  <span class="c1"># FIFO (First In First Out)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_process_zero_timeout_timer</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="c1"># This is the widget that is currently being displayed, if this is None, then </span>
+		<span class="c1"># nothing is being displayed</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="c1"># Intialize our user interface StatusBar and widgets a few...</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_initUI</span><span class="p">()</span></div>
+
+	<span class="c1"># -------------------------------------------------------------------------</span>
+	<span class="c1"># Private Pythonic Interface ----------------------------------------------</span>
+	<span class="c1"># -------------------------------------------------------------------------</span>
+
+	<span class="k">def</span> <span class="nf">_initUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+		<span class="c1"># This will be the default color for the countdown timer progressbar</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_color</span> <span class="o">=</span> <span class="n">PYQTPROGBAR</span><span class="o">.</span><span class="n">DEFAULT_COLOR_PURPLE</span>
+
+		<span class="c1"># Add permanent QLabel for displayed message index</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span> <span class="o">=</span> <span class="n">PyQtLineEditProgressBar</span><span class="p">(</span>
+			<span class="n">behavior</span><span class="o">=</span><span class="n">PYQTPROGBAR</span><span class="o">.</span><span class="n">STARTS_FULL_EMPTIES_RIGHT_TO_LEFT</span><span class="p">,</span>
+			<span class="n">progressbar_color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_color</span><span class="p">,</span>
+			<span class="n">text_for_bounding_rect</span><span class="o">=</span><span class="s2">&quot; 88888/888 [88] &quot;</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setMaxLength</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_field_width</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">6</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Fixed</span><span class="p">,</span> <span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Fixed</span><span class="p">)</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">_clear_msg_idx_label</span><span class="p">()</span> <span class="c1"># rather than: self._update_msg_idx_label()</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label_tt_msg</span> <span class="o">=</span> <span class="s2">&quot;..out of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label_tt_msg</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">addPermanentWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="p">)</span>
+
+		<span class="c1"># Add permanent Help Icon</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_help_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_help_icon_file</span><span class="p">:</span>
+			<span class="c1"># Load Help Icon from user file</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_help_icon_file</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># Load Help Icon from binary data</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_built_in_help_icon</span> <span class="o">==</span> <span class="n">BUILT_IN_HELP_ICON_DARK</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;:/gfx/baseline_help_black_24dp.png&#39;</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_built_in_help_icon</span> <span class="o">==</span> <span class="n">BUILT_IN_HELP_ICON_LIGHT</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;:/gfx/baseline_help_outline_24dp.png&#39;</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_built_in_help_icon</span> <span class="o">==</span> <span class="n">BUILT_IN_HELP_ICON_TWO_TONE</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;:/gfx/baseline_help_twotone_24dp.png&#39;</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;:/gfx/baseline_help_outline_24dp.png&#39;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_help_button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_icon</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_help_button</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Fixed</span><span class="p">,</span> <span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Fixed</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_help_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_statusbar_help_dialog</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_help_button</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s2">&quot;Statusbar Help...&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">addPermanentWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_help_button</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">removeProgressBar</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">_buffer_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_tuple</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;The entry_tuple looks like: (msg, timeout, fg, bg, bold)&quot;&quot;&quot;</span>
+
+		<span class="c1"># Before we can update the msg index, we need to insure</span>
+		<span class="c1"># that we have not reached the limit of the buffer size</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="c1"># Reached limit of buffer, so we delete the oldest entry</span>
+			<span class="n">entry_to_throw_away</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Reached limit of buffer throwing away top entry at idx 0: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">entry_to_throw_away</span><span class="p">))</span>
+
+		<span class="c1"># unpack the tuple</span>
+		<span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span> <span class="o">=</span> <span class="n">entry_tuple</span>
+
+		<span class="c1"># Let&#39;s add a timestamp to this entry</span>
+		<span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+		<span class="n">timestamp</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+
+		<span class="c1"># enqueue the message</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">+</span> <span class="mi">1</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;At idx: </span><span class="si">{}</span><span class="s2"> Buffered: </span><span class="si">{}</span><span class="s2">, to:</span><span class="si">{}</span><span class="s2">, fg:</span><span class="si">{}</span><span class="s2">, bg:</span><span class="si">{}</span><span class="s2">, bold:</span><span class="si">{}</span><span class="s2">, ts:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="nf">_update_msg_idx_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Use the _displayed_msg_idx to update the _msg_idx_label widget&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="c1"># If there are no message yet displayed, the label is all dashes</span>
+			<span class="c1">#label_text = &#39;-&#39; * (len(str(self._buffer_size)) + 1)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_clear_msg_idx_label</span><span class="p">()</span>
+			<span class="k">return</span><span class="p">()</span>
+		
+		<span class="n">label_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">qsize</span><span class="p">())</span>
+		<span class="c1">#self._logr.debug(&quot;Updating msg index label text: {}&quot;.format(label_text))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">label_text</span><span class="p">)</span>
+		<span class="c1">#self._msg_idx_label.setAlignment(Qt.AlignCenter)</span>
+
+	<span class="k">def</span> <span class="nf">_clear_msg_idx_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">label_text</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; [-]&#39;</span>
+		<span class="c1">#self._logr.debug(&quot;label text: {}&quot;.format(label_text))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">label_text</span><span class="p">)</span>	
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">_move_viewport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+		<span class="c1"># Enforce displayed msg idx wrapping</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="c1"># The queue is empty</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># There are messages in the queue</span>
+
+			<span class="c1"># These are special cases for the page size commands (PAGE_UP, PAGE_DOWN)</span>
+			<span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">delta</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span><span class="p">):</span>
+				<span class="c1"># if we are displaying the top of the buffer and we get a PAGE_UP, go to the end of the buffer</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+			
+			<span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">delta</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span><span class="p">):</span>
+				<span class="c1"># if we are displaying the bottom of the buffer and we get a PAGE_DOWN, go to the top of the buffer</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+			<span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">delta</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span><span class="p">):</span>
+				<span class="c1"># if we are displaying a location that is less than the page size away from the top of the buffer,</span>
+				<span class="c1"># and we get a PAGE_UP, go to the top of the buffer</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+			<span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span><span class="p">)</span> <span class="ow">and</span> \
+					<span class="n">delta</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span><span class="p">:</span>
+				<span class="c1"># if we are displaying a location that is within a page size of the end of the bugger, </span>
+				<span class="c1"># and we get a PAGE_DOWN, go to the bottom of the buffer</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+			<span class="k">else</span><span class="p">:</span>
+				<span class="c1"># Normal cases, we are moving by just one location up or down</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">+=</span> <span class="n">delta</span>
+
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+					<span class="c1"># we are beyond the top of the buffer, wrap to end</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+					<span class="c1"># we are beyond the end of the buffer, wrap to beginning (home)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">_display_viewport</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">_format_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">bg</span> <span class="ow">and</span> <span class="n">fg</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;color: </span><span class="si">{}</span><span class="s2">; background-color: </span><span class="si">{}</span><span class="s2">;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">))</span>
+			<span class="k">elif</span> <span class="n">bg</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color: </span><span class="si">{}</span><span class="s2">;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bg</span><span class="p">))</span>
+			<span class="k">elif</span> <span class="n">fg</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;color: </span><span class="si">{}</span><span class="s2">;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fg</span><span class="p">))</span>
+			
+			<span class="k">if</span> <span class="n">bold</span><span class="p">:</span>
+				<span class="n">font</span> <span class="o">=</span> <span class="n">QFont</span><span class="p">()</span>
+				<span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">_display_viewport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span>
+
+		<span class="c1"># We ignore the timeout when we are moving through the buffer</span>
+		<span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">time_not_used</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">]</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_format_text</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_update_msg_idx_label</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">_add_key_modifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="c1"># https://stackoverflow.com/questions/8772595/how-to-check-if-a-keyboard-modifier-is-pressed-shift-ctrl-alt</span>
+		<span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+			<span class="n">QModifiers</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">keyboardModifiers</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_key_modifiers</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">QModifiers</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ControlModifier</span><span class="p">)</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ControlModifier</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_key_modifiers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;control&#39;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">QModifiers</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AltModifier</span><span class="p">)</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AltModifier</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_key_modifiers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;alt&#39;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">QModifiers</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ShiftModifier</span><span class="p">)</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ShiftModifier</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_key_modifiers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;shift&#39;</span><span class="p">)</span>
+			<span class="n">new_key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+			<span class="k">for</span> <span class="n">modifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_modifiers</span><span class="p">:</span>
+				<span class="n">new_key</span> <span class="o">+=</span> <span class="n">modifier</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span>
+			<span class="n">new_key</span> <span class="o">+=</span> <span class="n">key</span>
+			<span class="k">return</span><span class="p">(</span><span class="n">new_key</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">_msg_timeout_fired</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timed_msg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Remove the widget whose timer fired&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SingleShot Timer Fired&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+			<span class="c1"># If the progressbar starts filled rather than empty,</span>
+			<span class="c1"># it will end filled, so clear it with this call.</span>
+			<span class="c1"># If the progressbar starts empty rather than filled,</span>
+			<span class="c1"># this call is superfluous.</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">removeProgressBar</span><span class="p">()</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+			<span class="n">msg_entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Dequeued waiting message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_this_entry</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">timed_msg</span><span class="p">:</span>
+				<span class="c1"># This was a msg with a non-zero timeout, so clear it</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">_update_progressbar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">updateProgress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">_buffer_this_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_entry</span><span class="p">):</span>
+		<span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span> <span class="o">=</span> <span class="n">msg_entry</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Displaying &amp; Buffering Msg: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_format_text</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">timeout</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timeout &gt; 0...&quot;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... no timer running...&quot;</span><span class="p">)</span>
+				<span class="c1"># No currently active timer, so we set one up...</span>
+				<span class="c1"># but first lets setup the countdown progressbar if timer is long enough</span>
+				<span class="k">if</span> <span class="n">timeout</span> <span class="o">&gt;</span> <span class="mi">2000</span><span class="p">:</span> <span class="c1"># 2 seconds</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timer greater than 2 seconds...&quot;</span><span class="p">)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">timeout</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Setting up ProgressBar Timer: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span><span class="p">))</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">updateProgress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span><span class="p">)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_progressbar</span><span class="p">)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+				<span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_timeout_fired</span><span class="p">(</span><span class="n">timed_msg</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... there is a pending timer, so wait queue this msg&quot;</span><span class="p">)</span>
+				<span class="c1"># There is a pending timer, so put this message on the wait queue</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timer = 0, setting up a 1.5 second single shot timer...&quot;</span><span class="p">)</span>
+			<span class="c1"># timeout == 0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_process_zero_timeout_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_process_zero_timeout_timer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_timeout_fired</span><span class="p">(</span><span class="n">timed_msg</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_entry</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;...adding message widget to statusbar...&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_update_msg_idx_label</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">_enqueue_to_wait_q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">):</span>
+		<span class="c1"># if timeout == 0:</span>
+		<span class="c1"># 	# We need some small timeout here so the entry gets removed from the</span>
+		<span class="c1"># 	# wait queue by the firing of the singleShot timer</span>
+		<span class="c1"># 	timeout = 1000  # 1000 = 1 second</span>
+		<span class="n">msg_entry</span> <span class="o">=</span> <span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_update_msg_idx_label</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">_save_message_buffer_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_buffer_file</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing message buffer to file &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg_buffer_file</span><span class="p">))</span>
+		<span class="n">width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span>
+		<span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="s2">&quot;0:0</span><span class="si">{}</span><span class="s2">d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
+		<span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">msg_buffer_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mbf</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">:</span>
+				<span class="n">idx_str</span> <span class="o">=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+				<span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="n">entry</span> 
+				<span class="n">mbf</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> msecs FG:</span><span class="si">{}</span><span class="s2"> BG:</span><span class="si">{}</span><span class="s2"> BOLD:</span><span class="si">{}</span><span class="s2"> @ </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx_str</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
+				<span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+	<span class="k">def</span> <span class="nf">_statusbar_help_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">about_dialog</span> <span class="o">=</span> <span class="n">AboutDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">about_dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
+	<span class="c1"># -------------------------------------------------------------------------</span>
+	<span class="c1"># PyQtMessageBar&#39;s Public API</span>
+	<span class="c1"># -------------------------------------------------------------------------</span>
+
+	<span class="c1"># Properties --------------------------------------------------------------</span>
+	<span class="c1"># @property</span>
+	<span class="c1"># def buffersize(self):</span>
+	<span class="c1"># 	return(self._buffer_size) </span>
+
+	<span class="c1"># Methods -----------------------------------------------------------------</span>
+	<span class="c1"># def setBufferSize(self, size_int):</span>
+	<span class="c1"># 	&quot;&quot;&quot;Set message buffer size.</span>
+
+	<span class="c1"># 	Parameters</span>
+	<span class="c1"># 	----------</span>
+	<span class="c1"># 	size_int : int</span>
+	<span class="c1"># 		This is the number of messages that can be buffered before the oldest</span>
+	<span class="c1"># 		message is lost</span>
+
+	<span class="c1"># 	Returns</span>
+	<span class="c1"># 	-------</span>
+	<span class="c1"># 	Nothing</span>
+	<span class="c1"># 		Nothing</span>
+
+	<span class="c1"># 	Note that the buffer size is never allowed to go below the default buffer size.</span>
+	<span class="c1"># 	Which is the constant **pyqtmessagebar.DEFAULT_BUFFER_SIZE**.</span>
+	<span class="c1"># 	&quot;&quot;&quot;</span>
+	<span class="c1"># 	if isinstance(size_int, int):</span>
+	<span class="c1"># 		if size_int &lt; DEFAULT_BUFFER_SIZE:</span>
+	<span class="c1"># 			size_int = DEFAULT_BUFFER_SIZE</span>
+	<span class="c1"># 	else:</span>
+	<span class="c1"># 		size_int = DEFAULT_BUFFER_SIZE</span>
+			
+	<span class="c1"># 	self._buffer_size  = size_int</span>
+
+<div class="viewcode-block" id="PyQtMessageBar.getBufferSize"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.getBufferSize">[docs]</a>	<span class="k">def</span> <span class="nf">getBufferSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns the current message buffer size.&quot;&quot;&quot;</span>
+		<span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="p">)</span></div>
+
+	<span class="c1"># def setEnableSeparators(self, flag):</span>
+	<span class="c1"># 	&quot;&quot;&quot;Sets the enable separators boolean to flag value.</span>
+	<span class="c1"># 	The effect of this flag being True is that any</span>
+	<span class="c1"># 	widgets added to the statusbar via the addPermanentWidget()</span>
+	<span class="c1"># 	call will have a separator placed to the left of the widget added.</span>
+	<span class="c1"># 	&quot;&quot;&quot;</span>
+	<span class="c1"># 	if isinstance(flag, bool):</span>
+	<span class="c1"># 		self._enable_separators = flag</span>
+	
+<div class="viewcode-block" id="PyQtMessageBar.getEnableSeparators"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.getEnableSeparators">[docs]</a>	<span class="k">def</span> <span class="nf">getEnableSeparators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns the value of the enable separators flag.&quot;&quot;&quot;</span>
+		<span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_enable_separators</span><span class="p">)</span></div>
+
+	<span class="c1"># def setEnableDarkIcon(self, help_icon_indicator):</span>
+	<span class="c1"># 	&quot;&quot;&quot;Sets the built-in help icon to the help_icon_indicator.</span>
+
+	<span class="c1"># 	Parameters</span>
+	<span class="c1"># 	----------</span>
+	<span class="c1"># 	help_icon_indicator : str constant</span>
+	<span class="c1"># 		Must be one of the three following values module constants</span>
+	<span class="c1"># 		BUILT_IN_HELP_ICON_LIGHT, BUILT_IN_HELP_ICON_DARK, or </span>
+	<span class="c1"># 		BUILT_IN_HELP_ICON_TWO_TONE. The default is LIGHT.</span>
+
+	<span class="c1"># 	Note the built-in help icons can be replaced using specifying the </span>
+	<span class="c1"># 	**help_icon_file** parameter to the **PyQtMessageBar** constructor.</span>
+	<span class="c1"># 	&quot;&quot;&quot;</span>
+	<span class="c1"># 	if isinstance(help_icon_indicator, str):</span>
+	<span class="c1"># 		if help_icon_indicator in HELP_ICON_INDICATORS:</span>
+	<span class="c1"># 			self._built_in_help_icon = help_icon_indicator</span>
+	<span class="c1"># 		else:</span>
+	<span class="c1"># 			self._built_in_help_icon = BUILT_IN_HELP_ICON_LIGHT</span>
+	<span class="c1"># 	else:</span>
+	<span class="c1"># 		self._built_in_help_icon = BUILT_IN_HELP_ICON_LIGHT</span>
+
+<div class="viewcode-block" id="PyQtMessageBar.getBuiltInHelpIcon"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.getBuiltInHelpIcon">[docs]</a>	<span class="k">def</span> <span class="nf">getBuiltInHelpIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns the value of the built-in help icon indicator.&quot;&quot;&quot;</span>
+		<span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_built_in_help_icon</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyQtMessageBar.setProgressBarColor"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.setProgressBarColor">[docs]</a>	<span class="k">def</span> <span class="nf">setProgressBarColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_text</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Sets the color of the countdown timer progress bar</span>
+<span class="sd">		to the color value specified by color_text.</span>
+
+<span class="sd">		Note that color_text can be any color representation</span>
+<span class="sd">		supported by the `colour package &lt;https://pypi.org/project/colour/&gt;`_.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setProgressBarColor</span><span class="p">(</span><span class="n">color_text</span><span class="p">)</span> </div>
+
+<div class="viewcode-block" id="PyQtMessageBar.getProgressBarColor"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.getProgressBarColor">[docs]</a>	<span class="k">def</span> <span class="nf">getProgressBarColor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns the value of the countdown timer progress bar color.&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">getProgressBarColor</span><span class="p">()</span>
+		<span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_color</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyQtMessageBar.clearMessage"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.clearMessage">[docs]</a>	<span class="k">def</span> <span class="nf">clearMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;This method added to distinguish clearing (or removing) the currently</span>
+<span class="sd">		displayed message and removing some other custom widget that the user </span>
+<span class="sd">		may have added.&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">removeWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_clear_msg_idx_label</span><span class="p">()</span>	</div>
+
+
+	<span class="c1"># -------------------------------------------------------------------------</span>
+	<span class="c1"># Here a three helper methods that serve as shorthand for setting up</span>
+	<span class="c1"># common color schemes for certain types of messages:</span>
+	<span class="c1">#     showMessage(self, msg, timeout=0, fg=None, bg=None, bold=False)</span>
+	<span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="PyQtMessageBar.showMessageError"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.showMessageError">[docs]</a>	<span class="k">def</span> <span class="nf">showMessageError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;This is a helper method that serves as a short-hand call to </span>
+<span class="sd">		**showMessage()** that configures the message to be an error message</span>
+<span class="sd">		which looks like:</span>
+
+<span class="sd">			Yellow FG, Brick Red BG, Bold Text, No Timeout</span>
+
+<span class="sd">		.. image:: _static/error_message.png</span>
+<span class="sd">		   :align: center</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;#ffff00&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#aa0000&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyQtMessageBar.showMessageWarning"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.showMessageWarning">[docs]</a>	<span class="k">def</span> <span class="nf">showMessageWarning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;This is a helper method that serves as a short-hand call to </span>
+<span class="sd">		**showMessage()** that configures the message to be an warning</span>
+<span class="sd">		message which looks like:</span>
+
+<span class="sd">			Black FG, Yellow BG, Bold Text, No Timeout</span>
+
+<span class="sd">		.. image:: _static/warning_message.png</span>
+<span class="sd">		   :align: center</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#ffff00&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyQtMessageBar.showMessageAskForInput"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.showMessageAskForInput">[docs]</a>	<span class="k">def</span> <span class="nf">showMessageAskForInput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;his is a helper method that serves as a short-hand call to </span>
+<span class="sd">		**showMessage()** that configures the message to be an affirmation</span>
+<span class="sd">		message which looks like:</span>
+
+<span class="sd">			White FG, Forest Green BG, Bold Text, No Timeout</span>
+
+<span class="sd">		.. image:: _static/affirmation_message.png</span>
+<span class="sd">		   :align: center</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;#ffffff&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#005500&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+	<span class="c1"># -------------------------------------------------------------------------</span>
+	<span class="c1"># Overriding these Qt QStatusBar methods</span>
+	<span class="c1"># -------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="PyQtMessageBar.keyPressEvent"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.keyPressEvent">[docs]</a>	<span class="k">def</span> <span class="nf">keyPressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		**Overrides Qt keyPressEvent()**</span>
+<span class="sd">		</span>
+<span class="sd">		This method overrides the Qt keyPressEvent method to add keyboard input</span>
+<span class="sd">		processing. Any keys NOT processed here are passed on to the base class</span>
+<span class="sd">		implementation of keyPressEvent().</span>
+
+<span class="sd">		See `QWidget keyPressEvent docs &lt;https://doc.qt.io/qt-5/qwidget.html#keyPressEvent&gt;`_.</span>
+<span class="sd">		</span>
+<span class="sd">		The following keys are recognized, all other keys are pass to the base</span>
+<span class="sd">		class implementation of keyPressEvent():</span>
+
+<span class="sd">			* Qt.Key_Up - Display the buffered message before the currently displayed message.</span>
+<span class="sd">			* Qt.Key_Home - Display the oldest buffered message.</span>
+<span class="sd">			* Qt.Key_Down - Display the buffered message after the currently displayed message.</span>
+<span class="sd">			* Qt.Key_End - Display the most recent buffered message.</span>
+<span class="sd">			* Qt.Key_PageUp - Page the buffered message displayed up by page size entries.</span>
+<span class="sd">			* Qt.Key_PageDown - Page the buffered message displayed down by page size entries.</span>
+<span class="sd">			* control-alt-X - Delete the currently displayed buffered message.</span>
+<span class="sd">			* control-alt-shift-X - Delete all of the buffered messages.</span>
+<span class="sd">			* control-alt-S - Save the message buffer to a file in the **save_msg_buffer_dir** directory.</span>
+<span class="sd">			* control-alt-shift-S - Save the message buffer to a file location determined by the user&#39;s use of the File Save As Dialog.</span>
+
+
+<span class="sd">		.. note:: The two key sequences based on the S key, will be disabled if the </span>
+<span class="sd">		          **PyQtMessageBar** constructor is called without specifying the **save_msg_buffer_dir**</span>
+<span class="sd">		          parameter.</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		e : QEvent</span>
+<span class="sd">			This event returns the key via the **e.key()** method call.</span>
+<span class="sd">		</span>
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Nothing</span>
+<span class="sd">			None, but does call the appropriate PyQtMessageBar method to handle</span>
+<span class="sd">			recognized keys.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">KeyPress</span><span class="p">:</span>
+			<span class="c1">#print(&quot;SMARTSTATUSBAR: press {}&quot;.format(e.key()))</span>
+			<span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">key</span><span class="p">()</span>
+			<span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">KEY_MAP</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">KEY_MOVE</span><span class="p">:</span>
+					<span class="c1"># https://doc.qt.io/qt-5/qt.html#Key-enum</span>
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_Up</span><span class="p">:</span>
+						<span class="c1">#print(&quot;UP ARROW&quot;)</span>
+						<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">:</span>
+							<span class="c1"># only if there is a widget being displayed to we decrement</span>
+							<span class="c1"># if there is no widget being displayed the idx is already</span>
+							<span class="c1"># pointing to the bottom of the buffer, so no need to decrement.</span>
+							<span class="n">delta</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+						<span class="k">else</span><span class="p">:</span>
+							<span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_Down</span><span class="p">:</span>
+						<span class="c1">#print(&quot;DOWN ARROW&quot;)</span>
+						<span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span>
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_PageUp</span><span class="p">:</span>
+						<span class="c1">#print(&quot;PAGE UP&quot;)</span>
+						<span class="n">delta</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span>
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_PageDown</span><span class="p">:</span>
+						<span class="c1">#print(&quot;PAGE DOWN&quot;) </span>
+						<span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span>
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_Home</span><span class="p">:</span>
+						<span class="c1">#print(&quot;HOME&quot;)</span>
+						<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="mi">0</span>
+						<span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_End</span><span class="p">:</span>
+						<span class="c1">#print(&quot;END&quot;)</span>
+						<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+						<span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+
+					<span class="bp">self</span><span class="o">.</span><span class="n">_move_viewport</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+
+				<span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">KEY_CMDS</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_X</span><span class="p">:</span>
+						<span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_key_modifiers</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+						<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;control-alt-shift-X&#39;</span><span class="p">:</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleting entire message buffer...&quot;</span><span class="p">)</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span>
+
+						<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;control-alt-X&#39;</span><span class="p">:</span>
+							<span class="n">entry_to_throw_away</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">)</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleted message @ idx </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="n">entry_to_throw_away</span><span class="p">))</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">_move_viewport</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_S</span><span class="p">:</span>
+						<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_msg_buffer_dir</span><span class="p">:</span>
+							<span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_key_modifiers</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+							<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;control-alt-shift-S&#39;</span><span class="p">:</span>
+
+								<span class="n">msg_buffer_file</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%Hh%Mm%Ss</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.msgs&#39;</span>
+								<span class="n">start_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_msg_buffer_dir</span><span class="p">,</span> <span class="n">msg_buffer_file</span><span class="p">)</span>
+
+								<span class="n">msg_buffer_file</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Save Message Buffer File&#39;</span><span class="p">,</span>
+													<span class="n">start_file_name</span><span class="p">,</span> <span class="s2">&quot;Msg Buf Files (*.msgs)&quot;</span><span class="p">)</span>
+
+								<span class="bp">self</span><span class="o">.</span><span class="n">_save_message_buffer_to_file</span><span class="p">(</span><span class="n">msg_buffer_file</span><span class="p">)</span>
+
+							<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;control-alt-S&#39;</span><span class="p">:</span>
+								<span class="n">msg_buffer_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_msg_buffer_dir</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%Hh%Mm%Ss</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.msgs&#39;</span><span class="p">)</span>	
+
+								<span class="bp">self</span><span class="o">.</span><span class="n">_save_message_buffer_to_file</span><span class="p">(</span><span class="n">msg_buffer_file</span><span class="p">)</span>
+
+			<span class="k">else</span><span class="p">:</span>
+				<span class="c1"># If we do not act on the key, then we need to call the base class&#39;s</span>
+				<span class="c1"># implementation of keyPressEvent() so some other widget may act on it.</span>
+				<span class="nb">super</span><span class="p">(</span><span class="n">PyQtMessageBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">keyPressEvent</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PyQtMessageBar.addPermanentWidget"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.addPermanentWidget">[docs]</a>	<span class="k">def</span> <span class="nf">addPermanentWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;**Overrides QStatusBar.addPermanentWidget()**</span>
+
+<span class="sd">		This method overrides the base class implementation so</span>
+<span class="sd">		we can add the ability to insert a separator if so enabled.</span>
+
+<span class="sd">		Then the base class addPermantWidget() is called.&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enable_separators</span><span class="p">:</span>
+			<span class="nb">super</span><span class="p">(</span><span class="n">PyQtMessageBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">addPermanentWidget</span><span class="p">(</span><span class="n">VLine</span><span class="p">())</span>
+
+		<span class="nb">super</span><span class="p">(</span><span class="n">PyQtMessageBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">addPermanentWidget</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">stretch</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PyQtMessageBar.insertPermanentWidget"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.insertPermanentWidget">[docs]</a>	<span class="k">def</span> <span class="nf">insertPermanentWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;**Overrides QStatusBar.insertPermanentWidget()**</span>
+
+<span class="sd">		This method overrides the base class implementation so</span>
+<span class="sd">		we can add the ability to insert a separator if so enabled.</span>
+
+<span class="sd">		Then the base class insertPermanentWidget() is called.&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enable_separators</span><span class="p">:</span>
+			<span class="nb">super</span><span class="p">(</span><span class="n">PyQtMessageBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">insertPermanentWidget</span><span class="p">(</span><span class="n">VLine</span><span class="p">())</span>
+
+		<span class="nb">super</span><span class="p">(</span><span class="n">PyQtMessageBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">insertPermanentWidget</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">stretch</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyQtMessageBar.currentMessage"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.currentMessage">[docs]</a>	<span class="k">def</span> <span class="nf">currentMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;**Overrides QStatusBar.currentMessage()**</span>
+
+<span class="sd">		Returns the currently displayed message or the empty string if</span>
+<span class="sd">		there is no currently dislayed message.&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">:</span>
+			<span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+		<span class="k">return</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyQtMessageBar.showMessage"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.showMessage">[docs]</a>	<span class="k">def</span> <span class="nf">showMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;**Overrides QStatusBar.showMessage()**</span>
+
+<span class="sd">		This method completely replaces Qt&#39;s QStatusBar.ShowMessage() </span>
+<span class="sd">		because we need inner knowledge of when messages timeout.</span>
+
+<span class="sd">		We also add colors for foreground, fg, and background, bg.</span>
+<span class="sd">		</span>
+<span class="sd">		Note, we do not provide the stretch parameter because we control</span>
+<span class="sd">		the layout, at least we think we do.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		msg : str</span>
+<span class="sd">			The statusbar message to be displayed and buffered.</span>
+<span class="sd">		timeout : int</span>
+<span class="sd">			If non-zero the message will have a timeout and be removed</span>
+<span class="sd">			from the statusbar display once the timeout expires.</span>
+<span class="sd">		fg : str (color)</span>
+<span class="sd">			The foreground color (text color) of the message to be displayed.</span>
+<span class="sd">			The color value can be any color representation supported by</span>
+<span class="sd">			the `colour package &lt;https://pypi.org/project/colour/&gt;`_.</span>
+<span class="sd">			If not specified, the system default color is used.</span>
+<span class="sd">		bg : str (color)</span>
+<span class="sd">			The background color of the message to be displayed.</span>
+<span class="sd">			The color value can be any color representation supported by</span>
+<span class="sd">			the `colour package &lt;https://pypi.org/project/colour/&gt;`_.</span>
+<span class="sd">			If not specified, the system default color is used.</span>
+<span class="sd">		bold: bool</span>
+<span class="sd">			If True the test of the message will be bold.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># pad msg with a leading space...</span>
+		<span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">msg</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;showMessage called...&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;msg widget already being displayed...&quot;</span><span class="p">)</span>
+			<span class="c1"># There is a msg being displayed...</span>
+			<span class="c1"># If there are other pending messages that have not yet been displayed,</span>
+			<span class="c1"># we enqueue this message to the wait queue.</span>
+			<span class="c1"># If msg being displayed has no timeout, we clear it and show this msg.</span>
+
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Queueing message: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+				<span class="c1"># We are waiting the currently diplayed message to timeout,</span>
+				<span class="c1"># or we have older pending messages that have not yet been displayed;</span>
+				<span class="c1"># so put this message on the wait queue</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_enqueue_to_wait_q</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span>
+
+				<span class="k">return</span><span class="p">()</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No wait Q timer running...&quot;</span><span class="p">)</span>
+
+		<span class="c1"># No message being displayed, however, we may have previous message in the wait queue</span>
+		<span class="c1"># being processed by the singleShot Timer; only if the wait queue is empty do we</span>
+		<span class="c1"># process the caller&#39;s message; otherwise, we put it on the wait queue.</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q empty, clear displayed message and buffer new msg.&quot;</span><span class="p">)</span>
+			<span class="c1"># self.clearMessage() --&gt;&gt; This is called first thing in _buffer_this_entry() below</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_this_entry</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q NOT empty, enqueue current message...&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_enqueue_to_wait_q</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, E.R. Uber
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

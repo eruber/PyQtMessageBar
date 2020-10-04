@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API &mdash; PyQtMessageBar 0.5.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PyQtMessageBar
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#logging">LOGGING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license-gpl">LICENSE GPL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#class-pyqtmessagebar">Class PyQtMessageBar</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyQtMessageBar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+      
+        <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pyqtmessagebar.__init__">
+<span id="api"></span><span id="api-label"></span><h1>API<a class="headerlink" href="#module-pyqtmessagebar.__init__" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-pyqtmessagebar"></span><p><strong>PyQtMessageBar</strong></p>
+<p>This messagebar subclasses the standard Qt Statusbar to implement a custom
+statusbar with the following capabilities:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Buffers StatusBar messages &amp; supports keyboard input to scroll through
+the buffered messages</p></li>
+<li><p>Qt.Key_Up</p></li>
+<li><p>Qt.Key_Home</p></li>
+<li><p>Qt.Key_Down</p></li>
+<li><p>Qt.Key_End</p></li>
+<li><p>Qt.Key_PageUp</p></li>
+<li><p>Qt.Key_PageDown</p></li>
+<li><p>Deletion of individual messages</p></li>
+<li><p>Deletion of entire message buffer</p></li>
+<li><p>Saving message buffer to a file</p></li>
+<li><p>Multiple messages with timeouts are placed on a wait queue</p></li>
+</ul>
+</div></blockquote>
+<p>In Qt, only the QWidget::setFocusPolicy() function affects click-to-focus.</p>
+<div class="section" id="logging">
+<h2>LOGGING<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
+<p>This module creates a logging handler named ‘PyQtMessageBar’ and always
+configures a Null handler.
+See <a class="reference external" href="https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library">Configuring Logging for a Library</a>.</p>
+<p class="rubric">References</p>
+<p>The following Qt references proved helpful:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://doc.qt.io/qt-5/qstatusbar.html">Qt StatusBar</a></p></li>
+<li><p><a class="reference external" href="https://doc.qt.io/qt-5/qt.html#Key-enum">Qt Keyboard Enumerations</a></p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license-gpl">
+<h2>LICENSE GPL<a class="headerlink" href="#license-gpl" title="Permalink to this headline">¶</a></h2>
+<p>This file is part of <strong>PyQtMessageBar</strong>.</p>
+<p>PyQtMessageBar is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>PyQtMessageBar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with PyQtMessageBar in the file named LICENSE_GPL. If not,
+see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
+<p>COPYRIGHT (C) 2020 E.R. Uber (<a class="reference external" href="mailto:eruber&#37;&#52;&#48;gmail&#46;com">eruber<span>&#64;</span>gmail<span>&#46;</span>com</a>)</p>
+</div>
+<div class="section" id="class-pyqtmessagebar">
+<h2>Class PyQtMessageBar<a class="headerlink" href="#class-pyqtmessagebar" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pyqtmessagebar.__init__.VLine">
+<em class="property">class </em><code class="sig-prename descclassname">pyqtmessagebar.__init__.</code><code class="sig-name descname">VLine</code><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#VLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.VLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QFrame</span></code></p>
+<p>A simple VLine, like the one you get from Qt Designer.
+See <a class="reference external" href="https://www.geeksforgeeks.org/pyqt5-how-to-add-separator-in-status-bar/">How to Add Separator to StatusBar</a>.</p>
+<p>This class is used when the <strong>PyQtMessageBar</strong> constructor parameter <strong>enable_separators</strong> is set True.</p>
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.VLine.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#VLine.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.VLine.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intializes a simple Vertical Line object that subclasses QFrame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pyqtmessagebar.__init__.VLine.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'pyqtmessagebar.__init__'</em><a class="headerlink" href="#pyqtmessagebar.__init__.VLine.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar">
+<em class="property">class </em><code class="sig-prename descclassname">pyqtmessagebar.__init__.</code><code class="sig-name descname">PyQtMessageBar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">msg_buffer_size</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">enable_separators</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">help_icon_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">built_in_help_icon</span><span class="o">=</span><span class="default_value">'Light'</span></em>, <em class="sig-param"><span class="n">parent_logger_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">save_msg_buffer_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QStatusBar</span></code></p>
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">msg_buffer_size</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">enable_separators</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">help_icon_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">built_in_help_icon</span><span class="o">=</span><span class="default_value">'Light'</span></em>, <em class="sig-param"><span class="n">parent_logger_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">save_msg_buffer_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for the <strong>PyQtMessageBar</strong> class which subclasses QStatusBar.</p>
+<p>It adds a buffered message index which includes a wait queue depth and it
+adds a messagebar help icon.</p>
+<img alt="_images/components.png" class="align-center" src="_images/components.png" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>qtwidget</em><em>, </em><em>optional</em>) – Reference to this widget’s parent widget</p></li>
+<li><p><strong>msg_buffer_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of messages to buffer before removing the oldest</p></li>
+<li><p><strong>enable_separators</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, any addPermanentWidget() calls will include a
+vertical separator to the left of the widget added.</p></li>
+<li><p><strong>help_icon_file</strong> (<em>str</em><em>, </em><em>optional</em>) – If specified, this file should be a 24x24 pixel image file
+to be used to replace the built-in help icon image. If specified,
+this icon will have prescedence over any built-in icon.</p></li>
+<li><p><strong>built_in_help_icon</strong> (<em>str</em><em>, </em><em>optional</em>) – This is a string constant that can be one of three values ‘Light’, ‘Dark’, ‘Two’.
+Use the module constants BUILT_IN_HELP_ICON_LIGHT, BUILT_IN_HELP_ICON_DARK, or
+BUILT_IN_HELP_ICON_TWO_TONE.</p></li>
+<li><p><strong>parent_logger_name</strong> (<em>str</em><em>, </em><em>optional</em>) – If specified, this logger will be used to enable logging; otherwise,
+all log calls will go to the Null Handler.</p></li>
+<li><p><strong>save_msg_buffer_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – A directory where any saved message buffers will be written to.
+If specified as None, then saving the message buffer will be
+disabled.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="figure align-center" id="id3">
+<img alt="_images/help_icons.png" src="_images/help_icons.png" />
+<p class="caption"><span class="caption-text">The Built-in Help Icons: Light, Dark, Two-Tone</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.getBufferSize">
+<code class="sig-name descname">getBufferSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.getBufferSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.getBufferSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current message buffer size.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.getEnableSeparators">
+<code class="sig-name descname">getEnableSeparators</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.getEnableSeparators"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.getEnableSeparators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the enable separators flag.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.getBuiltInHelpIcon">
+<code class="sig-name descname">getBuiltInHelpIcon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.getBuiltInHelpIcon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.getBuiltInHelpIcon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the built-in help icon indicator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.setProgressBarColor">
+<code class="sig-name descname">setProgressBarColor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">color_text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.setProgressBarColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.setProgressBarColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the color of the countdown timer progress bar
+to the color value specified by color_text.</p>
+<p>Note that color_text can be any color representation
+supported by the <a class="reference external" href="https://pypi.org/project/colour/">colour package</a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.getProgressBarColor">
+<code class="sig-name descname">getProgressBarColor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.getProgressBarColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.getProgressBarColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the countdown timer progress bar color.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.clearMessage">
+<code class="sig-name descname">clearMessage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.clearMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.clearMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method added to distinguish clearing (or removing) the currently
+displayed message and removing some other custom widget that the user
+may have added.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.showMessageError">
+<code class="sig-name descname">showMessageError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.showMessageError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.showMessageError" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a helper method that serves as a short-hand call to
+<strong>showMessage()</strong> that configures the message to be an error message
+which looks like:</p>
+<blockquote>
+<div><p>Yellow FG, Brick Red BG, Bold Text, No Timeout</p>
+</div></blockquote>
+<img alt="_images/error_message.png" class="align-center" src="_images/error_message.png" />
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.showMessageWarning">
+<code class="sig-name descname">showMessageWarning</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.showMessageWarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.showMessageWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a helper method that serves as a short-hand call to
+<strong>showMessage()</strong> that configures the message to be an warning
+message which looks like:</p>
+<blockquote>
+<div><p>Black FG, Yellow BG, Bold Text, No Timeout</p>
+</div></blockquote>
+<img alt="_images/warning_message.png" class="align-center" src="_images/warning_message.png" />
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.showMessageAskForInput">
+<code class="sig-name descname">showMessageAskForInput</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.showMessageAskForInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.showMessageAskForInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>his is a helper method that serves as a short-hand call to
+<strong>showMessage()</strong> that configures the message to be an affirmation
+message which looks like:</p>
+<blockquote>
+<div><p>White FG, Forest Green BG, Bold Text, No Timeout</p>
+</div></blockquote>
+<img alt="_images/affirmation_message.png" class="align-center" src="_images/affirmation_message.png" />
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.keyPressEvent">
+<code class="sig-name descname">keyPressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">e</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.keyPressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.keyPressEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Overrides Qt keyPressEvent()</strong></p>
+<p>This method overrides the Qt keyPressEvent method to add keyboard input
+processing. Any keys NOT processed here are passed on to the base class
+implementation of keyPressEvent().</p>
+<p>See <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html#keyPressEvent">QWidget keyPressEvent docs</a>.</p>
+<p>The following keys are recognized, all other keys are pass to the base
+class implementation of keyPressEvent():</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Qt.Key_Up - Display the buffered message before the currently displayed message.</p></li>
+<li><p>Qt.Key_Home - Display the oldest buffered message.</p></li>
+<li><p>Qt.Key_Down - Display the buffered message after the currently displayed message.</p></li>
+<li><p>Qt.Key_End - Display the most recent buffered message.</p></li>
+<li><p>Qt.Key_PageUp - Page the buffered message displayed up by page size entries.</p></li>
+<li><p>Qt.Key_PageDown - Page the buffered message displayed down by page size entries.</p></li>
+<li><p>control-alt-X - Delete the currently displayed buffered message.</p></li>
+<li><p>control-alt-shift-X - Delete all of the buffered messages.</p></li>
+<li><p>control-alt-S - Save the message buffer to a file in the <strong>save_msg_buffer_dir</strong> directory.</p></li>
+<li><p>control-alt-shift-S - Save the message buffer to a file location determined by the user’s use of the File Save As Dialog.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The two key sequences based on the S key, will be disabled if the
+<strong>PyQtMessageBar</strong> constructor is called without specifying the <strong>save_msg_buffer_dir</strong>
+parameter.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>e</strong> (<em>QEvent</em>) – This event returns the key via the <strong>e.key()</strong> method call.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None, but does call the appropriate PyQtMessageBar method to handle
+recognized keys.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.addPermanentWidget">
+<code class="sig-name descname">addPermanentWidget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">widget</span></em>, <em class="sig-param"><span class="n">stretch</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.addPermanentWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.addPermanentWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Overrides QStatusBar.addPermanentWidget()</strong></p>
+<p>This method overrides the base class implementation so
+we can add the ability to insert a separator if so enabled.</p>
+<p>Then the base class addPermantWidget() is called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.insertPermanentWidget">
+<code class="sig-name descname">insertPermanentWidget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">widget</span></em>, <em class="sig-param"><span class="n">stretch</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.insertPermanentWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.insertPermanentWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Overrides QStatusBar.insertPermanentWidget()</strong></p>
+<p>This method overrides the base class implementation so
+we can add the ability to insert a separator if so enabled.</p>
+<p>Then the base class insertPermanentWidget() is called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.currentMessage">
+<code class="sig-name descname">currentMessage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.currentMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.currentMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Overrides QStatusBar.currentMessage()</strong></p>
+<p>Returns the currently displayed message or the empty string if
+there is no currently dislayed message.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'pyqtmessagebar.__init__'</em><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.showMessage">
+<code class="sig-name descname">showMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">fg</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bg</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bold</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.showMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.showMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Overrides QStatusBar.showMessage()</strong></p>
+<p>This method completely replaces Qt’s QStatusBar.ShowMessage()
+because we need inner knowledge of when messages timeout.</p>
+<p>We also add colors for foreground, fg, and background, bg.</p>
+<p>Note, we do not provide the stretch parameter because we control
+the layout, at least we think we do.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> (<em>str</em>) – The statusbar message to be displayed and buffered.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – If non-zero the message will have a timeout and be removed
+from the statusbar display once the timeout expires.</p></li>
+<li><p><strong>fg</strong> (<em>str</em><em> (</em><em>color</em><em>)</em>) – <p>The foreground color (text color) of the message to be displayed.
+The color value can be any color representation supported by
+the <a class="reference external" href="https://pypi.org/project/colour/">colour package</a>.
+If not specified, the system default color is used.</p>
+</p></li>
+<li><p><strong>bg</strong> (<em>str</em><em> (</em><em>color</em><em>)</em>) – <p>The background color of the message to be displayed.
+The color value can be any color representation supported by
+the <a class="reference external" href="https://pypi.org/project/colour/">colour package</a>.
+If not specified, the system default color is used.</p>
+</p></li>
+<li><p><strong>bold</strong> (<em>bool</em>) – If True the test of the message will be bold.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, E.R. Uber
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
