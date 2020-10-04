@@ -7,14 +7,14 @@ keyboard activated scrolling through the message buffer.
 
 For more information about its features, read the [PyQtMessageBar User Manual](https://eruber.github.io/PyQtMessageBar/build/html/index.html).
 
-![](/docs/source/_static/components_readme.png)
+![](https://eruber.github.io/PyQtMessageBar/build/html/_static/components_readme.png)
 
 # Dependencies #
 The following packages are installed with **PyQtMessageBar**:
 
 - 	[PyQt5](https://riverbankcomputing.com/software/pyqt/intro) (5.14.0 or later)
 - 	[colour](https://pypi.org/project/colour/) (0.1.5 or later)
-- 	[pyqtlineeditorprogressbar](https://github.com/eruber/pyqtlineeditprogressbar) (0.3.2 or later)
+- 	[pyqtlineeditorprogressbar](https://github.com/eruber/pyqtlineeditprogressbar) (0.3.5 or later)
 
 # Installation #
 **PyQtMessageBar** can be installed via pip:
@@ -28,7 +28,7 @@ Invoke the **PyQtMessageBar** Test Bed like this:
 
 	PyQtMessageBarTestbed
 
-![](/docs/source/_static/testbed.png)
+![](https://eruber.github.io/PyQtMessageBar/build/html/_static/testbed.png)
 
 # License #
 **PyQtMessageBar** is licensed GPLv3. See the LICENSE file in the package root to satisfy all your legalese cravings. 
@@ -38,7 +38,7 @@ The help icons built-in to **PyQtMessageBar** are from [Google's Material Design
 
 The built-in Help Icons look like this (LIGHT, DARK, TWO-TONE):
 
-![](/docs/source/_static/help_icons.png)		
+![](https://eruber.github.io/PyQtMessageBar/build/html/_static/help_icons.png)
 
 # API #
 For more information on the inner workings of **PyQtMessageBar** read the [API documentation](https://eruber.github.io/PyQtMessageBar/build/html/api.html).
