@@ -2,10 +2,10 @@
 
 **PyQtMessageBar** is a full featured drop-in replacement for Qt's QStatusBar.
 
-Most notable amoung its many features are statusbar message buffering and 
+Most notable amoung its numerous features are statusbar message buffering and 
 keyboard activated scrolling through the message buffer.
 
-For more information about its features, read the [PyQtMessageBar User Manual](https://eruber.github.io/PyQtMessageBar/docs/build/html/index.html).
+For more information about its features, read the [PyQtMessageBar User Manual](https://eruber.github.io/PyQtMessageBar/build/html/index.html).
 
 ![](/docs/source/_static/components_readme.png)
 
@@ -37,7 +37,7 @@ Invoke the **PyQtMessageBar** Test Bed like this:
 The help icons built-in to **PyQtMessageBar** are from [Google's Material Design project](https://material.io/resources/icons/?style=baseline) and are free to use (but not to sell) under the terms of the [Apache license version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html).
 
 # API #
-For more information on the inner workings of **PyQtMessageBar** read the [API documentation](https://eruber.github.io/PyQtMessageBar/docs/build/html/api.html).
+For more information on the inner workings of **PyQtMessageBar** read the [API documentation](https://eruber.github.io/PyQtMessageBar/build/html/api.html).
 
 
 
