@@ -187,7 +187,6 @@ class PyQtMessageBar(QStatusBar):
 
 		.. figure:: _static/help_icons.png
 		   :align: center
-		   
 		   The Built-in Help Icons: Light, Dark, Two-Tone
 
 

@@ -22,7 +22,7 @@ The following packages are installed with **PyQtMessageBar**:
 	pip install pyqtmessagebar
 
 # Test the Installation #
-A test bed utility is installed along with **PyQtMessageBar** that exposes all the package features via a GUI that drive the **PyQtMessageBar** at the bottom of the tools' user interface.
+A test bed utility is installed along with **PyQtMessageBar** that exposes all the package features via a GUI that drives the **PyQtMessageBar** at the bottom of the tools' user interface.
 
 Invoke the **PyQtMessageBar** Test Bed like this:
 
@@ -35,6 +35,10 @@ Invoke the **PyQtMessageBar** Test Bed like this:
 
 # Attributions #
 The help icons built-in to **PyQtMessageBar** are from [Google's Material Design project](https://material.io/resources/icons/?style=baseline) and are free to use (but not to sell) under the terms of the [Apache license version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html).
+
+The built-in Help Icons look like this (LIGHT, DARK, TWO-TONE):
+
+![](/docs/source/_static/help_icons.png)		
 
 # API #
 For more information on the inner workings of **PyQtMessageBar** read the [API documentation](https://eruber.github.io/PyQtMessageBar/build/html/api.html).
