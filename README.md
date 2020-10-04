@@ -30,7 +30,6 @@ Invoke the **PyQtMessageBar** Test Bed like this:
 
 ![](/docs/source/_static/testbed.png)
 
-
 # License #
 **PyQtMessageBar** is licensed GPLv3. See the LICENSE file in the package root to satisfy all your legalese cravings. 
 
