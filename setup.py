@@ -6,21 +6,17 @@ if sys.version_info[0] < 3:
 	sys.exit('Error: Python 3.x is required.')
 
 
-long_description='''\
-PyQtMessageBar is a PyQT Custom Widget that subclasses QStatusBar
-to provide a message buffer plus numerous other features including
-keyboard interaction allowing the user to scroll forward and backward 
-through all statusbar messages in the message buffer.
-
-For more details, please go to the `project home page <https://github.com/eruber/PyQtMessageBar>`_ or 
-to the `project's User Manual <https://eruber.github.io/PyQtMessageBar/build/html/index.html>`_.
-'''
+# read the contents of your README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(name='PyQtMessageBar',
 	version = '0.3.1',
 	description="Subclass of Qt's QStatusBar that adds a message buffer, wait queue, and user interaction.",
 	long_description=long_description,
-	long_description_content_type="text/plain",
+	long_description_content_type='text/markdown',
 	author='E.R. Uber',
 	author_email='eruber@gmail.com',
 	url='https://github.com/eruber/PyQtMessageBar',
