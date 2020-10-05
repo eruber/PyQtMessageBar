@@ -28,6 +28,8 @@ After installing **PyQtMessageBar** and changing directory package *tests* direc
 
 	python testbed.py
 
+The testbed should display a GUI similar to this:
+
 ![](https://eruber.github.io/PyQtMessageBar/build/html/_static/testbed.png)
 
 # License #
