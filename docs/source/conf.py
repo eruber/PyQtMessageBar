@@ -68,7 +68,7 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'logo_only': False,      # Also dislays Project Name above Logo image
     'display_version': True,
-    'navigation_depth': 2,
+    'navigation_depth': 3,
     'prev_next_buttons_location': 'both',
     'style_external_links': True,  # An icon next to external links
     #'style_nav_header_background': '#e6d1e4', 

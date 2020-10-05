@@ -1,27 +1,14 @@
 """
-.. module:: pyqtmessagebar
+.. py:module:: pyqtmessagebar
 
 .. moduleauthor: E.R. Uber <eruber@gmail.com>
 
-**PyQtMessageBar**
+Class PyQtMessageBar
+====================
+This messagebar subclasses the standard Qt QStatusbar and provides
+a drop-in replacement for QStatusBar. 
 
-This messagebar subclasses the standard Qt Statusbar to implement a custom 
-statusbar with the following capabilities:
-	
-	* Buffers StatusBar messages & supports keyboard input to scroll through
-	  the buffered messages
-	* Qt.Key_Up
-	* Qt.Key_Home
-	* Qt.Key_Down
-	* Qt.Key_End
-	* Qt.Key_PageUp
-	* Qt.Key_PageDown
-	* Deletion of individual messages
-	* Deletion of entire message buffer
-	* Saving message buffer to a file
-	* Multiple messages with timeouts are placed on a wait queue
-
-In Qt, only the QWidget::setFocusPolicy() function affects click-to-focus.
+See the :ref:`intro_label` section for a high-level review of **PyQtMessageBar** features.
 
 LOGGING
 -------
@@ -32,7 +19,6 @@ See `Configuring Logging for a Library <https://docs.python.org/3/howto/logging.
 REFERENCES
 ----------
 The following Qt references proved helpful:
-
 	* `Qt StatusBar <https://doc.qt.io/qt-5/qstatusbar.html>`_
 	* `Qt Keyboard Enumerations <https://doc.qt.io/qt-5/qt.html#Key-enum>`_
 
@@ -52,14 +38,38 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with PyQtMessageBar in the file named LICENSE_GPL. If not, 
+along with PyQtMessageBar in the file named LICENSE. If not, 
 see <https://www.gnu.org/licenses/>.
 
 COPYRIGHT (C) 2020 E.R. Uber (eruber@gmail.com)
 
-Class PyQtMessageBar
---------------------
+.. _pyqtmessagebar_class_label:
 
+USAGE
+-----
+You use **PyQtMessageBar** in your code just like you would use QStatusBar,
+it just can have a bit more going on with its constructor call. But here
+we show the simplest usage::
+
+	from PyQt5.Qt import Qt
+	from pyqtmessagebar import PyQtMessageBar
+	...
+	# Note that the root 'self' shown here is typically an earlier
+	# instantiated QMainWindow
+
+	# The least complex constructor signature -- every parameter has a default value
+	self.statusbar = PyQtMessageBar()
+	
+	# In order for keyboard input to work with a PyQtMessageBar object, the focus
+	# must be properly set
+	self.statusbar.setFocusPolicy(Qt.StrongFocus)
+	self.setFocusProxy(self.statusbar)
+
+	# This actually attaches the ByQtMessageBar to the QMainWindow
+	self.setStatusBar(statusbar)
+
+PyQtMessageBar Details
+----------------------
 """
 # ----------------------------------------------------------------------------
 # ------------------------ Python Standard Library ---------------------------
@@ -73,7 +83,7 @@ import logging
 # -------------------------- Third Party Packages ----------------------------
 # ----------------------------------------------------------------------------
 from PyQt5.Qt import Qt
-from PyQt5.QtCore import QEvent, QSize, QByteArray, QFileInfo, QTimer
+from PyQt5.QtCore import QEvent, QSize, QByteArray, QFileInfo, QTimer, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon, QImage, QPixmap, QFont
 from PyQt5.QtWidgets import (
 	QStatusBar, QApplication, QLabel, QFrame, QPushButton, QSizePolicy,
@@ -88,6 +98,8 @@ from colour import Color
 from pyqtlineeditprogressbar import PyQtLineEditProgressBar
 import pyqtlineeditprogressbar as PYQTPROGBAR
 from pyqtmessagebar.aboutdialog import AboutDialog
+from pyqtmessagebar.vline import VLine
+#from pyqtmessagebar.waitqueuesignal import WaitQueueEmptiedSignal
 
 # ----------------------------------------------------------------------------
 # ----------------------- Module Global & Constants --------------------------
@@ -127,19 +139,6 @@ BUILT_IN_HELP_ICON_TWO_TONE = 'Two'
 HELP_ICON_INDICATORS = [BUILT_IN_HELP_ICON_LIGHT, BUILT_IN_HELP_ICON_DARK, BUILT_IN_HELP_ICON_TWO_TONE]
 
 # ----------------------------------------------------------------------------
-class VLine(QFrame):
-	"""A simple VLine, like the one you get from Qt Designer.
-	See `How to Add Separator to StatusBar <https://www.geeksforgeeks.org/pyqt5-how-to-add-separator-in-status-bar/>`_.
-	
-	This class is used when the **PyQtMessageBar** constructor parameter **enable_separators** is set True.
-	"""
-	def __init__(self):
-		"""Intializes a simple Vertical Line object that subclasses QFrame."""
-		super(VLine, self).__init__()
-		self.setFrameShape(self.VLine|self.Sunken)
-
-# ----------------------------------------------------------------------------
-# https://doc.qt.io/qt-5/qstatusbar.html
 class PyQtMessageBar(QStatusBar):
 	
 	def __init__(self, parent=None, 
@@ -149,15 +148,14 @@ class PyQtMessageBar(QStatusBar):
 					built_in_help_icon=BUILT_IN_HELP_ICON_LIGHT,
 					parent_logger_name=None,
 					save_msg_buffer_dir=None,
+					timer_wait_q_emptied_signal=None,
 					 ):
 		"""Constructor for the **PyQtMessageBar** class which subclasses QStatusBar.
+	
+		See `Qt's QStatusBar Documentation <https://doc.qt.io/qt-5/qstatusbar.html>`_.
 
 		It adds a buffered message index which includes a wait queue depth and it
 		adds a messagebar help icon.
-
-		.. image:: _static/components.png
-		   :align: center
-
 
 		Parameters
 		----------
@@ -183,12 +181,11 @@ class PyQtMessageBar(QStatusBar):
 			A directory where any saved message buffers will be written to.
 			If specified as None, then saving the message buffer will be
 			disabled.
-
-
-		.. figure:: _static/help_icons.png
-		   :align: center
-		   The Built-in Help Icons: Light, Dark, Two-Tone
-
+		timer_wait_q_emptied_signal : WaitQueueEmptiedSignal object, optional
+			Provides a custom signal and allows user to connect their
+			own slot method to the timer wait queue becoming empty.
+			See WaitQueueEmptiedSignal :ref:`waitqueuesignal_usage_label` for
+			a code example of how to set this signal up.
 
 		"""
 		super(PyQtMessageBar, self).__init__(parent=parent)
@@ -201,6 +198,8 @@ class PyQtMessageBar(QStatusBar):
 		self._built_in_help_icon  = built_in_help_icon
 		self._parent_loggger_name = parent_logger_name
 		self._save_msg_buffer_dir = save_msg_buffer_dir
+		
+		self._timer_wait_q_emptied_signal = timer_wait_q_emptied_signal
 
 		# Initializing internal data
 		self._progressbar_delta = None
@@ -419,6 +418,10 @@ class PyQtMessageBar(QStatusBar):
 			new_key += key
 			return(new_key)
 
+	@pyqtSlot()
+	def _timer_wait_q_emptied(self):
+		print("WAIT QUEUE EMPTIED")
+
 	def _msg_timeout_fired(self, timed_msg=False):
 		"""Remove the widget whose timer fired"""
 		self._logr.debug("SingleShot Timer Fired")
@@ -436,6 +439,10 @@ class PyQtMessageBar(QStatusBar):
 			msg_entry = self._timer_wait_q.get()
 			self._logr.debug("Dequeued waiting message: {}".format(msg_entry[0]))
 			self._buffer_this_entry(msg_entry)
+
+			if self._timer_wait_q.empty():
+				if self._timer_wait_q_emptied_signal:
+					self._timer_wait_q_emptied_signal.empty()
 		else:
 			if timed_msg:
 				# This was a msg with a non-zero timeout, so clear it
@@ -520,6 +527,17 @@ class PyQtMessageBar(QStatusBar):
 	# 	return(self._buffer_size) 
 
 	# Methods -----------------------------------------------------------------
+	def getWaitQueueDepth(self):
+		"""Returns the wait queue depth (int)"""
+		if self._timer_wait_q.empty():
+			return(0)
+		else:
+			return(self._timer_wait_q.qsize())
+
+	def waitQueueIsEmpty(self):
+		"""Returns True if wait queue is empty, false otherwise."""
+		return(self._timer_wait_q.empty())
+
 	# def setBufferSize(self, size_int):
 	# 	"""Set message buffer size.
 
@@ -669,24 +687,23 @@ class PyQtMessageBar(QStatusBar):
 
 		See `QWidget keyPressEvent docs <https://doc.qt.io/qt-5/qwidget.html#keyPressEvent>`_.
 		
-		The following keys are recognized, all other keys are pass to the base
+		The following keys are recognized, all other keys are passed to the base
 		class implementation of keyPressEvent():
 
-			* Qt.Key_Up - Display the buffered message before the currently displayed message.
-			* Qt.Key_Home - Display the oldest buffered message.
-			* Qt.Key_Down - Display the buffered message after the currently displayed message.
-			* Qt.Key_End - Display the most recent buffered message.
-			* Qt.Key_PageUp - Page the buffered message displayed up by page size entries.
-			* Qt.Key_PageDown - Page the buffered message displayed down by page size entries.
-			* control-alt-X - Delete the currently displayed buffered message.
-			* control-alt-shift-X - Delete all of the buffered messages.
-			* control-alt-S - Save the message buffer to a file in the **save_msg_buffer_dir** directory.
-			* control-alt-shift-S - Save the message buffer to a file location determined by the user's use of the File Save As Dialog.
-
+			* Qt.Key_Up
+			* Qt.Key_Home.
+			* Qt.Key_Down
+			* Qt.Key_End
+			* Qt.Key_PageUp
+			* Qt.Key_PageDown
+			* control-alt-X
+			* control-alt-shift-X
+			* control-alt-S
+			* control-alt-shift-S
 
 		.. note:: The two key sequences based on the S key, will be disabled if the 
-		          **PyQtMessageBar** constructor is called without specifying the **save_msg_buffer_dir**
-		          parameter.
+				  **PyQtMessageBar** constructor is called without specifying the **save_msg_buffer_dir**
+				  parameter.
 		
 		Parameters
 		----------
@@ -814,10 +831,11 @@ class PyQtMessageBar(QStatusBar):
 		This method completely replaces Qt's QStatusBar.ShowMessage() 
 		because we need inner knowledge of when messages timeout.
 
-		We also add colors for foreground, fg, and background, bg.
+		We also add colors for foreground (fg), background (bg), and
+		a flag for enabling bold text.
 		
 		Note, we do not provide the stretch parameter because we control
-		the layout, at least we think we do.
+		the layout, at least we think we do. :)
 
 		Parameters
 		----------
@@ -837,7 +855,7 @@ class PyQtMessageBar(QStatusBar):
 			the `colour package <https://pypi.org/project/colour/>`_.
 			If not specified, the system default color is used.
 		bold: bool
-			If True the test of the message will be bold.
+			If True the text of the message will be bold.
 
 		"""
 		# pad msg with a leading space...
@@ -869,5 +887,5 @@ class PyQtMessageBar(QStatusBar):
 			# self.clearMessage() -->> This is called first thing in _buffer_this_entry() below
 			self._buffer_this_entry((msg, timeout, fg, bg, bold))
 		else:
-			self.debug("Wait Q NOT empty, enqueue current message...")
+			self._logr.debug("Wait Q NOT empty, enqueue current message...")
 			self._enqueue_to_wait_q(msg, timeout, fg, bg, bold)

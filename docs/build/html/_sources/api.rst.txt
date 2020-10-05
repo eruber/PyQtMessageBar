@@ -34,3 +34,10 @@ API
    :special-members:
    :undoc-members:
    :show-inheritance:
+
+
+.. automodule:: pyqtmessagebar.waitqueuesignal
+   :members:
+   :special-members:
+   :show-inheritance:
+   :undoc-members:

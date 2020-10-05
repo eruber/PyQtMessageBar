@@ -149,29 +149,16 @@
             
   <h1>Source code for pyqtmessagebar.__init__</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">.. module:: pyqtmessagebar</span>
+<span class="sd">.. py:module:: pyqtmessagebar</span>
 
 <span class="sd">.. moduleauthor: E.R. Uber &lt;eruber@gmail.com&gt;</span>
 
-<span class="sd">**PyQtMessageBar**</span>
+<span class="sd">Class PyQtMessageBar</span>
+<span class="sd">====================</span>
+<span class="sd">This messagebar subclasses the standard Qt QStatusbar and provides</span>
+<span class="sd">a drop-in replacement for QStatusBar. </span>
 
-<span class="sd">This messagebar subclasses the standard Qt Statusbar to implement a custom </span>
-<span class="sd">statusbar with the following capabilities:</span>
-<span class="sd">	</span>
-<span class="sd">	* Buffers StatusBar messages &amp; supports keyboard input to scroll through</span>
-<span class="sd">	  the buffered messages</span>
-<span class="sd">	* Qt.Key_Up</span>
-<span class="sd">	* Qt.Key_Home</span>
-<span class="sd">	* Qt.Key_Down</span>
-<span class="sd">	* Qt.Key_End</span>
-<span class="sd">	* Qt.Key_PageUp</span>
-<span class="sd">	* Qt.Key_PageDown</span>
-<span class="sd">	* Deletion of individual messages</span>
-<span class="sd">	* Deletion of entire message buffer</span>
-<span class="sd">	* Saving message buffer to a file</span>
-<span class="sd">	* Multiple messages with timeouts are placed on a wait queue</span>
-
-<span class="sd">In Qt, only the QWidget::setFocusPolicy() function affects click-to-focus.</span>
+<span class="sd">See the :ref:`intro_label` section for a high-level review of **PyQtMessageBar** features.</span>
 
 <span class="sd">LOGGING</span>
 <span class="sd">-------</span>
@@ -182,7 +169,6 @@
 <span class="sd">REFERENCES</span>
 <span class="sd">----------</span>
 <span class="sd">The following Qt references proved helpful:</span>
-
 <span class="sd">	* `Qt StatusBar &lt;https://doc.qt.io/qt-5/qstatusbar.html&gt;`_</span>
 <span class="sd">	* `Qt Keyboard Enumerations &lt;https://doc.qt.io/qt-5/qt.html#Key-enum&gt;`_</span>
 
@@ -202,14 +188,38 @@
 <span class="sd">GNU General Public License for more details.</span>
 
 <span class="sd">You should have received a copy of the GNU General Public License</span>
-<span class="sd">along with PyQtMessageBar in the file named LICENSE_GPL. If not, </span>
+<span class="sd">along with PyQtMessageBar in the file named LICENSE. If not, </span>
 <span class="sd">see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
 <span class="sd">COPYRIGHT (C) 2020 E.R. Uber (eruber@gmail.com)</span>
 
-<span class="sd">Class PyQtMessageBar</span>
-<span class="sd">--------------------</span>
+<span class="sd">.. _pyqtmessagebar_class_label:</span>
 
+<span class="sd">USAGE</span>
+<span class="sd">-----</span>
+<span class="sd">You use **PyQtMessageBar** in your code just like you would use QStatusBar,</span>
+<span class="sd">it just can have a bit more going on with its constructor call. But here</span>
+<span class="sd">we show the simplest usage::</span>
+
+<span class="sd">	from PyQt5.Qt import Qt</span>
+<span class="sd">	from pyqtmessagebar import PyQtMessageBar</span>
+<span class="sd">	...</span>
+<span class="sd">	# Note that the root &#39;self&#39; shown here is typically an earlier</span>
+<span class="sd">	# instantiated QMainWindow</span>
+
+<span class="sd">	# The least complex constructor signature -- every parameter has a default value</span>
+<span class="sd">	self.statusbar = PyQtMessageBar()</span>
+<span class="sd">	</span>
+<span class="sd">	# In order for keyboard input to work with a PyQtMessageBar object, the focus</span>
+<span class="sd">	# must be properly set</span>
+<span class="sd">	self.statusbar.setFocusPolicy(Qt.StrongFocus)</span>
+<span class="sd">	self.setFocusProxy(self.statusbar)</span>
+
+<span class="sd">	# This actually attaches the ByQtMessageBar to the QMainWindow</span>
+<span class="sd">	self.setStatusBar(statusbar)</span>
+
+<span class="sd">PyQtMessageBar Details</span>
+<span class="sd">----------------------</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># ------------------------ Python Standard Library ---------------------------</span>
@@ -223,7 +233,7 @@
 <span class="c1"># -------------------------- Third Party Packages ----------------------------</span>
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="kn">from</span> <span class="nn">PyQt5.Qt</span> <span class="kn">import</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QEvent</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QByteArray</span><span class="p">,</span> <span class="n">QFileInfo</span><span class="p">,</span> <span class="n">QTimer</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QEvent</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QByteArray</span><span class="p">,</span> <span class="n">QFileInfo</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">pyqtSlot</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPixmap</span><span class="p">,</span> <span class="n">QFont</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
 	<span class="n">QStatusBar</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QSizePolicy</span><span class="p">,</span>
@@ -238,6 +248,8 @@
 <span class="kn">from</span> <span class="nn">pyqtlineeditprogressbar</span> <span class="kn">import</span> <span class="n">PyQtLineEditProgressBar</span>
 <span class="kn">import</span> <span class="nn">pyqtlineeditprogressbar</span> <span class="k">as</span> <span class="nn">PYQTPROGBAR</span>
 <span class="kn">from</span> <span class="nn">pyqtmessagebar.aboutdialog</span> <span class="kn">import</span> <span class="n">AboutDialog</span>
+<span class="kn">from</span> <span class="nn">pyqtmessagebar.vline</span> <span class="kn">import</span> <span class="n">VLine</span>
+<span class="c1">#from pyqtmessagebar.waitqueuesignal import WaitQueueEmptiedSignal</span>
 
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># ----------------------- Module Global &amp; Constants --------------------------</span>
@@ -277,19 +289,6 @@
 <span class="n">HELP_ICON_INDICATORS</span> <span class="o">=</span> <span class="p">[</span><span class="n">BUILT_IN_HELP_ICON_LIGHT</span><span class="p">,</span> <span class="n">BUILT_IN_HELP_ICON_DARK</span><span class="p">,</span> <span class="n">BUILT_IN_HELP_ICON_TWO_TONE</span><span class="p">]</span>
 
 <span class="c1"># ----------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VLine"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.VLine">[docs]</a><span class="k">class</span> <span class="nc">VLine</span><span class="p">(</span><span class="n">QFrame</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;A simple VLine, like the one you get from Qt Designer.</span>
-<span class="sd">	See `How to Add Separator to StatusBar &lt;https://www.geeksforgeeks.org/pyqt5-how-to-add-separator-in-status-bar/&gt;`_.</span>
-<span class="sd">	</span>
-<span class="sd">	This class is used when the **PyQtMessageBar** constructor parameter **enable_separators** is set True.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="VLine.__init__"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.VLine.__init__">[docs]</a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Intializes a simple Vertical Line object that subclasses QFrame.&quot;&quot;&quot;</span>
-		<span class="nb">super</span><span class="p">(</span><span class="n">VLine</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">setFrameShape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VLine</span><span class="o">|</span><span class="bp">self</span><span class="o">.</span><span class="n">Sunken</span><span class="p">)</span></div></div>
-
-<span class="c1"># ----------------------------------------------------------------------------</span>
-<span class="c1"># https://doc.qt.io/qt-5/qstatusbar.html</span>
 <div class="viewcode-block" id="PyQtMessageBar"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar">[docs]</a><span class="k">class</span> <span class="nc">PyQtMessageBar</span><span class="p">(</span><span class="n">QStatusBar</span><span class="p">):</span>
 	
 <div class="viewcode-block" id="PyQtMessageBar.__init__"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.__init__">[docs]</a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
@@ -299,15 +298,14 @@
 					<span class="n">built_in_help_icon</span><span class="o">=</span><span class="n">BUILT_IN_HELP_ICON_LIGHT</span><span class="p">,</span>
 					<span class="n">parent_logger_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 					<span class="n">save_msg_buffer_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+					<span class="n">timer_wait_q_emptied_signal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 					 <span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Constructor for the **PyQtMessageBar** class which subclasses QStatusBar.</span>
+<span class="sd">	</span>
+<span class="sd">		See `Qt&#39;s QStatusBar Documentation &lt;https://doc.qt.io/qt-5/qstatusbar.html&gt;`_.</span>
 
 <span class="sd">		It adds a buffered message index which includes a wait queue depth and it</span>
 <span class="sd">		adds a messagebar help icon.</span>
-
-<span class="sd">		.. image:: _static/components.png</span>
-<span class="sd">		   :align: center</span>
-
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
@@ -333,13 +331,11 @@
 <span class="sd">			A directory where any saved message buffers will be written to.</span>
 <span class="sd">			If specified as None, then saving the message buffer will be</span>
 <span class="sd">			disabled.</span>
-
-
-<span class="sd">		.. figure:: _static/help_icons.png</span>
-<span class="sd">		   :align: center</span>
-<span class="sd">		   </span>
-<span class="sd">		   The Built-in Help Icons: Light, Dark, Two-Tone</span>
-
+<span class="sd">		timer_wait_q_emptied_signal : WaitQueueEmptiedSignal object, optional</span>
+<span class="sd">			Provides a custom signal and allows user to connect their</span>
+<span class="sd">			own slot method to the timer wait queue becoming empty.</span>
+<span class="sd">			See WaitQueueEmptiedSignal :ref:`waitqueuesignal_usage_label` for</span>
+<span class="sd">			a code example of how to set this signal up.</span>
 
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="nb">super</span><span class="p">(</span><span class="n">PyQtMessageBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
@@ -352,6 +348,8 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_built_in_help_icon</span>  <span class="o">=</span> <span class="n">built_in_help_icon</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_parent_loggger_name</span> <span class="o">=</span> <span class="n">parent_logger_name</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_save_msg_buffer_dir</span> <span class="o">=</span> <span class="n">save_msg_buffer_dir</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q_emptied_signal</span> <span class="o">=</span> <span class="n">timer_wait_q_emptied_signal</span>
 
 		<span class="c1"># Initializing internal data</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span> <span class="o">=</span> <span class="kc">None</span>
@@ -570,6 +568,10 @@
 			<span class="n">new_key</span> <span class="o">+=</span> <span class="n">key</span>
 			<span class="k">return</span><span class="p">(</span><span class="n">new_key</span><span class="p">)</span>
 
+	<span class="nd">@pyqtSlot</span><span class="p">()</span>
+	<span class="k">def</span> <span class="nf">_timer_wait_q_emptied</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WAIT QUEUE EMPTIED&quot;</span><span class="p">)</span>
+
 	<span class="k">def</span> <span class="nf">_msg_timeout_fired</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timed_msg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Remove the widget whose timer fired&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SingleShot Timer Fired&quot;</span><span class="p">)</span>
@@ -587,6 +589,10 @@
 			<span class="n">msg_entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Dequeued waiting message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_this_entry</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">)</span>
+
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q_emptied_signal</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q_emptied_signal</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">timed_msg</span><span class="p">:</span>
 				<span class="c1"># This was a msg with a non-zero timeout, so clear it</span>
@@ -671,6 +677,17 @@
 	<span class="c1"># 	return(self._buffer_size) </span>
 
 	<span class="c1"># Methods -----------------------------------------------------------------</span>
+<div class="viewcode-block" id="PyQtMessageBar.getWaitQueueDepth"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.getWaitQueueDepth">[docs]</a>	<span class="k">def</span> <span class="nf">getWaitQueueDepth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns the wait queue depth (int)&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+			<span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">qsize</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="PyQtMessageBar.waitQueueIsEmpty"><a class="viewcode-back" href="../../api.html#pyqtmessagebar.__init__.PyQtMessageBar.waitQueueIsEmpty">[docs]</a>	<span class="k">def</span> <span class="nf">waitQueueIsEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns True if wait queue is empty, false otherwise.&quot;&quot;&quot;</span>
+		<span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">())</span></div>
+
 	<span class="c1"># def setBufferSize(self, size_int):</span>
 	<span class="c1"># 	&quot;&quot;&quot;Set message buffer size.</span>
 
@@ -820,24 +837,23 @@
 
 <span class="sd">		See `QWidget keyPressEvent docs &lt;https://doc.qt.io/qt-5/qwidget.html#keyPressEvent&gt;`_.</span>
 <span class="sd">		</span>
-<span class="sd">		The following keys are recognized, all other keys are pass to the base</span>
+<span class="sd">		The following keys are recognized, all other keys are passed to the base</span>
 <span class="sd">		class implementation of keyPressEvent():</span>
 
-<span class="sd">			* Qt.Key_Up - Display the buffered message before the currently displayed message.</span>
-<span class="sd">			* Qt.Key_Home - Display the oldest buffered message.</span>
-<span class="sd">			* Qt.Key_Down - Display the buffered message after the currently displayed message.</span>
-<span class="sd">			* Qt.Key_End - Display the most recent buffered message.</span>
-<span class="sd">			* Qt.Key_PageUp - Page the buffered message displayed up by page size entries.</span>
-<span class="sd">			* Qt.Key_PageDown - Page the buffered message displayed down by page size entries.</span>
-<span class="sd">			* control-alt-X - Delete the currently displayed buffered message.</span>
-<span class="sd">			* control-alt-shift-X - Delete all of the buffered messages.</span>
-<span class="sd">			* control-alt-S - Save the message buffer to a file in the **save_msg_buffer_dir** directory.</span>
-<span class="sd">			* control-alt-shift-S - Save the message buffer to a file location determined by the user&#39;s use of the File Save As Dialog.</span>
-
+<span class="sd">			* Qt.Key_Up</span>
+<span class="sd">			* Qt.Key_Home.</span>
+<span class="sd">			* Qt.Key_Down</span>
+<span class="sd">			* Qt.Key_End</span>
+<span class="sd">			* Qt.Key_PageUp</span>
+<span class="sd">			* Qt.Key_PageDown</span>
+<span class="sd">			* control-alt-X</span>
+<span class="sd">			* control-alt-shift-X</span>
+<span class="sd">			* control-alt-S</span>
+<span class="sd">			* control-alt-shift-S</span>
 
 <span class="sd">		.. note:: The two key sequences based on the S key, will be disabled if the </span>
-<span class="sd">		          **PyQtMessageBar** constructor is called without specifying the **save_msg_buffer_dir**</span>
-<span class="sd">		          parameter.</span>
+<span class="sd">				  **PyQtMessageBar** constructor is called without specifying the **save_msg_buffer_dir**</span>
+<span class="sd">				  parameter.</span>
 <span class="sd">		</span>
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
@@ -965,10 +981,11 @@
 <span class="sd">		This method completely replaces Qt&#39;s QStatusBar.ShowMessage() </span>
 <span class="sd">		because we need inner knowledge of when messages timeout.</span>
 
-<span class="sd">		We also add colors for foreground, fg, and background, bg.</span>
+<span class="sd">		We also add colors for foreground (fg), background (bg), and</span>
+<span class="sd">		a flag for enabling bold text.</span>
 <span class="sd">		</span>
 <span class="sd">		Note, we do not provide the stretch parameter because we control</span>
-<span class="sd">		the layout, at least we think we do.</span>
+<span class="sd">		the layout, at least we think we do. :)</span>
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
@@ -988,7 +1005,7 @@
 <span class="sd">			the `colour package &lt;https://pypi.org/project/colour/&gt;`_.</span>
 <span class="sd">			If not specified, the system default color is used.</span>
 <span class="sd">		bold: bool</span>
-<span class="sd">			If True the test of the message will be bold.</span>
+<span class="sd">			If True the text of the message will be bold.</span>
 
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="c1"># pad msg with a leading space...</span>
@@ -1020,7 +1037,7 @@
 			<span class="c1"># self.clearMessage() --&gt;&gt; This is called first thing in _buffer_this_entry() below</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_this_entry</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">))</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q NOT empty, enqueue current message...&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q NOT empty, enqueue current message...&quot;</span><span class="p">)</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_enqueue_to_wait_q</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span></div></div>
 </pre></div>
 

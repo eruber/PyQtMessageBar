@@ -1,26 +1,26 @@
 """
 testbed
 
-Test Bed for Py Qt Smart StatusBar
+Testbed for Py Qt Smart StatusBar
 
 GPL LICENSE
-This file is part of AutoFoE.
+This file is part of Testbed.
 
-AutoFoE is free software: you can redistribute it and/or modify
+Testbed is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-AutoFoE is distributed in the hope that it will be useful,
+Testbed is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with AutoFoE in the file named COPYING. If not, 
+along with Testbed in the file named COPYING. If not, 
 see <https://www.gnu.org/licenses/>.
 
-COPYRIGHT (C) 2019-2020 Exil Risedo (ExilRisedo@protonmail.com)
+COPYRIGHT (C) 2020 E.R. Uber (eruber@gmail.com)
 
 """
 # ----------------------------------------------------------------------------
@@ -38,7 +38,7 @@ import random
 # ----------------------------------------------------------------------------
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from PyQt5.QtCore import Qt, QSize, QTimer, QSettings, QEvent
+from PyQt5.QtCore import Qt, QSize, QTimer, QSettings, QEvent, pyqtSlot
 from PyQt5.QtGui import QIcon, QPainter, QColor, QKeySequence
 from PyQt5.QtWidgets import (
 	QAction, 
@@ -73,6 +73,7 @@ from colour import Color
 # ----------------------------------------------------------------------------
 #from pyqtmessagebar.pyqtmessagebar import PyQtMessageBar
 from pyqtmessagebar import PyQtMessageBar
+from pyqtmessagebar.waitqueuesignal import WaitQueueEmptiedSignal
 import pyqtlineeditprogressbar as progressbar
 import pyqtmessagebar
 
@@ -115,7 +116,7 @@ class StatusBarControlPanel(QWidget):
 		self.groupBox_cfg_sbar = QtWidgets.QGroupBox(self.parent)
 		self.groupBox_cfg_sbar.setGeometry(QtCore.QRect(10, 10, 700, 50))
 		#self.groupBox_cfg_sbar.setObjectName("groupBox_cfg_sbar")
-		self.groupBox_cfg_sbar.setTitle("Configure StatusBar")
+		self.groupBox_cfg_sbar.setTitle("Re-Configure StatusBar")
 
 		self.checkBox_enable_seps = QtWidgets.QCheckBox(self.groupBox_cfg_sbar)
 		self.checkBox_enable_seps.setGeometry(QtCore.QRect(110, 18, 120, 20))
@@ -128,17 +129,17 @@ class StatusBarControlPanel(QWidget):
 		self.comboBox_help_icon_style.setGeometry(QtCore.QRect(240, 18, 130, 20))
 		self.comboBox_help_icon_style.currentIndexChanged.connect(self.parent.help_icon_changed)
 
-		self.pushButton_custom_help_icon = QtWidgets.QPushButton(self.groupBox_cfg_sbar)
-		self.pushButton_custom_help_icon.setGeometry(QtCore.QRect(390, 18, 125, 20))
-		self.pushButton_custom_help_icon.setObjectName("pushButton_custom_help_icon")
-		self.pushButton_custom_help_icon.setText("Load Custom Help Icon 1")
-		self.pushButton_custom_help_icon.clicked.connect(self.parent.load_custom_help_icon_1)
+		self.pushButton_custom_help_icon_1 = QtWidgets.QPushButton(self.groupBox_cfg_sbar)
+		self.pushButton_custom_help_icon_1.setGeometry(QtCore.QRect(390, 18, 125, 20))
+		self.pushButton_custom_help_icon_1.setObjectName("pushButton_custom_help_icon_1")
+		self.pushButton_custom_help_icon_1.setText("Load Custom Help Icon 1")
+		self.pushButton_custom_help_icon_1.clicked.connect(self.parent.load_custom_help_icon_1)
 
-		self.pushButton_custom_help_icon = QtWidgets.QPushButton(self.groupBox_cfg_sbar)
-		self.pushButton_custom_help_icon.setGeometry(QtCore.QRect(530, 18, 125, 20))
-		self.pushButton_custom_help_icon.setObjectName("pushButton_custom_help_icon")
-		self.pushButton_custom_help_icon.setText("Load Custom Help Icon 2")
-		self.pushButton_custom_help_icon.clicked.connect(self.parent.load_custom_help_icon_2)
+		self.pushButton_custom_help_icon_2 = QtWidgets.QPushButton(self.groupBox_cfg_sbar)
+		self.pushButton_custom_help_icon_2.setGeometry(QtCore.QRect(530, 18, 125, 20))
+		self.pushButton_custom_help_icon_2.setObjectName("pushButton_custom_help_icon_2")
+		self.pushButton_custom_help_icon_2.setText("Load Custom Help Icon 2")
+		self.pushButton_custom_help_icon_2.clicked.connect(self.parent.load_custom_help_icon_2)
 
 
 		self.groupBox_custom_msg = QtWidgets.QGroupBox(self.parent)
@@ -328,7 +329,7 @@ class StatusBarControlPanel(QWidget):
 		self.radioButton_LogLevel_DEBUG = QtWidgets.QRadioButton(self.groupBox_logging_level)
 		self.radioButton_LogLevel_DEBUG.setGeometry(QtCore.QRect(110, 23, 60, 20))
 		self.radioButton_LogLevel_DEBUG.setObjectName("radioButton_LogLevel_DEBUG")
-		self.radioButton_LogLevel_DEBUG.setChecked(True)
+		#self.radioButton_LogLevel_DEBUG.setChecked(True)
 		self.radioButton_LogLevel_DEBUG.clicked.connect(lambda: self.parent.set_logging_level(logging.DEBUG))
 		self.radioButton_LogLevel_DEBUG.setText("DEBUG")
 
@@ -347,6 +348,8 @@ class StatusBarControlPanel(QWidget):
 		self.radioButton_LogLevel_ERROR = QtWidgets.QRadioButton(self.groupBox_logging_level)
 		self.radioButton_LogLevel_ERROR.setGeometry(QtCore.QRect(405, 23, 65, 20))
 		self.radioButton_LogLevel_ERROR.setObjectName("radioButton_LogLevel_ERROR")
+		self.radioButton_LogLevel_ERROR.setChecked(True)
+		self.parent.set_logging_level(logging.ERROR)
 		self.radioButton_LogLevel_ERROR.clicked.connect(lambda: self.parent.set_logging_level(logging.ERROR))
 		self.radioButton_LogLevel_ERROR.setText("ERROR")
 
@@ -394,7 +397,7 @@ class MessageBarTestBed(QMainWindow):
 		self.centralwidget = QWidget()
 		self.setCentralWidget(self.centralwidget)
 
-		self.setWindowTitle("PyQtMessageBar Test Bed")
+		self.setWindowTitle("PyQtMessageBar Testbed")
 		self.vLayout = QVBoxLayout(self.centralwidget)
 		self.hLayout = QHBoxLayout()
 
@@ -413,15 +416,24 @@ class MessageBarTestBed(QMainWindow):
 		self.sb_cp = StatusBarControlPanel(self)
 		self.vLayout.addWidget(self.sb_cp)
 
+		self.timer_wait_queue_empty_signal = WaitQueueEmptiedSignal()
+		self.timer_wait_queue_empty_signal.emptied.connect(self.timer_wait_q_emptied)
+
 		self.setDefaultStatusBar()
 
 		# ssb == smart status bar
+		# This gets the status bar set in the above setDefaultStatusBar() call
 		self.ssb = self.statusBar()
 
 		self.setCentralWidget(self.centralwidget)
 
+		self.ssb.showMessage("Use the widgets above to create messages here.", bg='#c7c3c0', bold=True)
+
 	def setDefaultStatusBar(self):
-		self.smartstatusbar_0 = PyQtMessageBar(self, parent_logger_name='TestBed')
+		self.smartstatusbar_0 = PyQtMessageBar(self, 
+												parent_logger_name='TestBed',
+												timer_wait_q_emptied_signal=self.timer_wait_queue_empty_signal,
+												)
 
 		self.smartstatusbar_0.setFocusPolicy(Qt.StrongFocus)
 		self.setFocusProxy(self.smartstatusbar_0)
@@ -447,8 +459,16 @@ class MessageBarTestBed(QMainWindow):
 		# print("Help Icon File Name: {}".format(self._icon_filename))
 		self.configure_statusbar()
 
+	@pyqtSlot()
+	def timer_wait_q_emptied(self):
+		# This is a slot that gets called by a PyQtMessageBar object if it's so configured
+		# to inform the code using the PyQtMessageBar object that the timer wait
+		# queue has emptied.
+
+		# We now allow the configuration widgets to be used
+		self.config_widgets_setEnabled(True)
+
 	def configure_statusbar(self):
-		# print("CONFIGURE STATUSBAR")
 
 		self._built_in_help_icon = self.sb_cp.comboBox_help_icon_style.currentText().split(' ')[0]
 
@@ -460,12 +480,15 @@ class MessageBarTestBed(QMainWindow):
 		self.smartstatusbar = PyQtMessageBar(self, enable_separators=self._enable_separators,
 												built_in_help_icon = self._built_in_help_icon ,
 												help_icon_file=self._icon_filename,
-												parent_logger_name='TestBed')
+												parent_logger_name='TestBed',
+												timer_wait_q_emptied_signal=self.timer_wait_queue_empty_signal,
+												)
 		self.setStatusBar(self.smartstatusbar)
 		self.smartstatusbar.setFocusPolicy(Qt.StrongFocus)
 		self.setFocusProxy(self.smartstatusbar)
 
 		self.ssb = self.statusBar()
+
 
 	def fg_default_changed(self, state):
 		if state == QtCore.Qt.Checked:
@@ -554,6 +577,8 @@ class MessageBarTestBed(QMainWindow):
 			self._to_cd_color = None
 
 	def	submit_msg(self):
+		self.widgets_setEnabled(False)
+
 		msg = self.sb_cp.lineEdit_msg.text()
 		bold = self.sb_cp.checkBox_bold.isChecked()
 		timeout = self.sb_cp.spinBox_timeout.value() * 1000
@@ -571,6 +596,8 @@ class MessageBarTestBed(QMainWindow):
 		if progressbar_color:
 			self.ssb.setProgressBarColor(progressbar_color)
 		self.ssb.showMessage(msg, timeout, fg, bg, bold)
+
+		self.widgets_setEnabled(True)
 
 	def slider_changed(self):
 		self.sb_cp.lineEdit_slider_value.setText(str(self.sb_cp.slider.value()))
@@ -601,6 +628,14 @@ class MessageBarTestBed(QMainWindow):
 		return(complementary_color_str)
 
 	def do_random(self):
+
+		# Cannot re-configure statusbar if waitQueue has messages in it
+		self.config_widgets_setEnabled(False)
+		# These will be re-enabled by timer_wait_q_emptied() above, once the queue empties
+		# and a signal is generated since we are setting timer_wait_q_emptied_signal.
+
+		#self.widgets_setEnabled(False)
+
 		n = self.sb_cp.slider.value()
 		self.logger.info("Generate {} random messages".format(n))
 
@@ -628,6 +663,8 @@ class MessageBarTestBed(QMainWindow):
 			self.ssb.setProgressBarColor(pb)
 			self.ssb.showMessage(msg, timeout, fg, bg, bold)
 
+		#self.widgets_setEnabled(True)
+
 	def set_logging_level(self, level):
 		print("Setting Log Level to {} [{}]".format(LEVEL_MAP[level], level))
 		self.logger.setLevel(level)
@@ -641,6 +678,22 @@ class MessageBarTestBed(QMainWindow):
 		self.ch.setFormatter(self.formatter)
 		self.logger.addHandler(self.ch)
 
+	def widgets_setEnabled(self, flag):
+		self.sb_cp.pushButton_submit.setEnabled(flag)
+		self.sb_cp.pushButton_random.setEnabled(flag)
+		self.sb_cp.checkBox_enable_seps.setEnabled(flag)
+		self.sb_cp.comboBox_help_icon_style.setEnabled(flag)
+		self.sb_cp.pushButton_custom_help_icon_1.setEnabled(flag)
+		self.sb_cp.pushButton_custom_help_icon_2.setEnabled(flag)
+		self.sb_cp.pushButton_AFFIRM.setEnabled(flag)
+		self.sb_cp.pushButton_WARN.setEnabled(flag)
+		self.sb_cp.pushButton_ERROR.setEnabled(flag)
+		
+	def config_widgets_setEnabled(self, flag):
+		self.sb_cp.checkBox_enable_seps.setEnabled(flag)
+		self.sb_cp.comboBox_help_icon_style.setEnabled(flag)
+		self.sb_cp.pushButton_custom_help_icon_1.setEnabled(flag)
+		self.sb_cp.pushButton_custom_help_icon_2.setEnabled(flag)
 
 # ----------------------------------------------------------------------------
 

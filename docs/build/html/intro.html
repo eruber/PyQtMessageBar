@@ -85,6 +85,8 @@
               <p class="caption"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#keyboard-input">Keyboard Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testbed">Testbed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#further-reading">Further Reading</a></li>
 </ul>
 </li>
@@ -170,16 +172,19 @@
 <div><ul class="simple">
 <li><p>StatusBar message buffering</p></li>
 <li><p>StatusBar messages can specify a foreground color, a background color, enable bold text, and set a display timeout</p></li>
-<li><p>Display of a PyQtMessageBar Help Icon which provides access to a Help Dialog</p></li>
+<li><p>Display of a PyQtMessageBar Help Icon which provides access to a PyQtMessageBar Help Dialog</p></li>
 <li><p>Keyboard activated recall of buffered message via keys Up Arrow, Down Arrow, Page Up, Page Down, Home, and End</p></li>
-<li><p>Wait queueing of messages that have explicit display timeouts specified</p></li>
-<li><p>Display of a Message Index and Wait Queued Message Count Indicator</p></li>
-<li><p>Countdown timer progressbar display of wait queued messages</p></li>
-<li><p>Delete the currently displayed message via CTRL-ALT-X</p></li>
-<li><p>Deletion of ENTIRE message buffer via CTRL-ALT-SHIFT-X</p></li>
-<li><p>Save ENTIRE message buffer to a file under a directory specified at PyQtMessageBar object intialization time via CTRL-ALT-S</p></li>
-<li><p>Save ENTIRE message buffer to a file under a user chosen directory (using a File Save As Dialog) via CTRL-ALT-SHIFT-S</p></li>
+<li><p>Wait queueing of messages that have explicit display timeouts specified (the Timer Wait Queue)</p></li>
+<li><p>An indicator showing the currently displayed Message Index and Wait Queued Message Count Depth (how many messages
+or waiting to be displayed)</p></li>
+<li><p>Countdown timer progressbar display of wait queued messages in the background of the above mentioned indicator</p></li>
+<li><p>Delete the currently displayed message</p></li>
+<li><p>Deletion of ENTIRE message buffer</p></li>
+<li><p>Save ENTIRE message buffer to a file under a directory specified at PyQtMessageBar object intialization</p></li>
+<li><p>Save ENTIRE message buffer to a file under a user chosen directory (using a File Save As Dialog)</p></li>
+<li><p>Custom signal that the application can connect a slot method to in order to be informed when the Timer Wait Queue empties</p></li>
 </ul>
+<img alt="_images/components.png" class="align-center" src="_images/components.png" />
 </div></blockquote>
 <p><strong>PyQtMessageBar</strong> supports the following configurable features:</p>
 <blockquote>
@@ -189,11 +194,65 @@
 <li><p>Support of user specified Help Icon</p></li>
 <li><p>Ability to enable a vertical separator between StatusBar’s permanent widgets that might be added by the user</p></li>
 </ul>
+<p>The Built-in Help Icons: Light, Dark, Two-Tone</p>
+<img alt="_images/help_icons.png" class="align-center" src="_images/help_icons.png" />
 </div></blockquote>
+<div class="section" id="keyboard-input">
+<h2>Keyboard Input<a class="headerlink" href="#keyboard-input" title="Permalink to this headline">¶</a></h2>
+<p>The following key sequences are recognized by an in focus <strong>PyQtMessageBar</strong> object. See the first note below.</p>
+<ul class="simple">
+<li><p><strong>Up Arrow</strong> - Display the buffered message before the currently displayed message.</p></li>
+<li><p><strong>Down Arrow</strong> - Display the buffered message after the currently displayed message.</p></li>
+<li><p><strong>Home</strong> - Display the oldest buffered message.</p></li>
+<li><p><strong>End</strong> - Display the most recent buffered message.</p></li>
+<li><p><strong>PageUp</strong> - Page the buffered message displayed up by page size entries.</p></li>
+<li><p><strong>PageDown</strong> - Page the buffered message displayed down by page size entries.</p></li>
+<li><p><strong>control-alt-X</strong> - Delete the currently displayed buffered message.</p></li>
+<li><p><strong>control-alt-shift-X</strong> - Delete all of the buffered messages.</p></li>
+<li><p><strong>control-alt-S</strong> - Save the message buffer to a file in the <strong>save_msg_buffer_dir</strong> directory.</p></li>
+<li><p><strong>control-alt-shift-S</strong> - Save the message buffer to a file location determined by the user’s use of the displayed File Save As Dialog.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In order for a <strong>PyQtMessageBar</strong> object to interact with the keyboard it must have its focus properly
+set. See <a class="reference internal" href="api.html#pyqtmessagebar-class-label"><span class="std std-ref">Class PyQtMessageBar</span></a> in the API section for a code example of how to setup the keyboard
+focus for a statusbar.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The page size for <strong>PageUp/PageDown</strong> is 10 messages.</p>
+</div>
+</div>
+<div class="section" id="testbed">
+<h2>Testbed<a class="headerlink" href="#testbed" title="Permalink to this headline">¶</a></h2>
+<p>The source distribution of <strong>PyQtMessageBar</strong> contains a <strong>testbed.py</strong> file in the <em>tests</em> directory that
+facilitates composing custom message colors and demonstrates how to exercise the <strong>PyQtMessageBar</strong> API.</p>
+<p>The testbed GUI looks like this when first invoked:</p>
+<img alt="_images/testbed_at_startup.png" class="align-center" src="_images/testbed_at_startup.png" />
+<p>The <strong>Configure StatusBar</strong> group of widgets will instantiate a new statusbar when a widget in that
+group is used. So these widgets are disabled during any generation of random messages by the <strong>Generate Random
+Messages</strong> widget group. After random message generation is complete, the <strong>Configure StatusBar</strong> group of widgets
+should be enabled again.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While the random generation of statusbar messages highlights the display of the message index and the
+timer wait queue countdown progressbar; it does not always generate foreground and background colors that
+have high enough contrast to be easily readable – eventhough a minimal amount of effort was expended to
+try and generate constrasting colors. <img alt="ohwell" src="_images/inverted_smiley_18.png" /></p>
+</div>
+</div>
 <div class="section" id="further-reading">
 <h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this headline">¶</a></h2>
 <p>For more internal details see the <a class="reference internal" href="api.html#api-label"><span class="std std-ref">API</span></a> section.</p>
 <p>For more information on Qt’s QStatusBar <a class="reference external" href="https://doc.qt.io/qt-5/qstatusbar.html">read the Qt QStatusBar Docs</a>.</p>
+<dl class="simple">
+<dt><strong>PyQtMessageBar</strong> manifestations on-line are:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://github.com/eruber/PyQtMessageBar">PyQtMessageBar at GitHub</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pyqtmessagebar">PyQtMessageBar at PyPi</a></p></li>
+<li><p><a class="reference external" href="https://eruber.github.io/PyQtMessageBar/build/html/index.html">PyQtMessageBar GitHub Pages</a></p></li>
+</ul>
+</dd>
+</dl>
 </div>
 </div>
 

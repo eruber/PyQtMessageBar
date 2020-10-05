@@ -17,7 +17,7 @@ to the `project's User Manual <https://eruber.github.io/PyQtMessageBar/build/htm
 '''
 
 setup(name='PyQtMessageBar',
-	version = '0.3.0',
+	version = '0.3.1',
 	description="Subclass of Qt's QStatusBar that adds a message buffer, wait queue, and user interaction.",
 	long_description=long_description,
 	long_description_content_type="text/plain",
