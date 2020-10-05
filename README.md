@@ -22,11 +22,11 @@ The following packages are installed with **PyQtMessageBar**:
 	pip install pyqtmessagebar
 
 # Test the Installation #
-A test bed utility is installed along with **PyQtMessageBar** that exposes all the package features via a GUI that drives the **PyQtMessageBar** at the bottom of the tools' user interface.
+A test bed utility is available in the **PyQtMessageBar** source distribution that exposes most of the package features via a GUI that drives the **PyQtMessageBar** at the bottom of the tools' user interface..
 
-Invoke the **PyQtMessageBar** Test Bed like this:
+After installing **PyQtMessageBar** and changing directory package *tests* directory, run the testbed tool like this:
 
-	PyQtMessageBarTestbed
+	python testbed.py
 
 ![](https://eruber.github.io/PyQtMessageBar/build/html/_static/testbed.png)
 

@@ -34,9 +34,9 @@ setup(name='PyQtMessageBar',
 	'colour>=0.1.5',
 	],
 	license='GPLv3',
-	entry_points={
-		'gui_scripts': ['PyQtMessageBarTestbed = tests.testbed:main'],
-	},
+	# entry_points={
+	# 	'gui_scripts': ['PyQtMessageBarTestbed = tests.testbed:main'],
+	# },
 	classifiers = [
 		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',

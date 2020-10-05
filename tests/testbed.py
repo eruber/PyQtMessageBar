@@ -123,23 +123,10 @@ class StatusBarControlPanel(QWidget):
 		self.checkBox_enable_seps.setText("Enable Separators")
 		self.checkBox_enable_seps.toggled.connect(self.parent.enable_separators)
 
-
-
-
 		self.comboBox_help_icon_style  = QtWidgets.QComboBox(self.groupBox_cfg_sbar)
 		self.comboBox_help_icon_style.addItems(['Light Help Icon', 'Dark Help Icon', 'Two Tone Help Icon'])
 		self.comboBox_help_icon_style.setGeometry(QtCore.QRect(240, 18, 130, 20))
 		self.comboBox_help_icon_style.currentIndexChanged.connect(self.parent.help_icon_changed)
-
-		# self.checkBox_enable_dark_help_icon = QtWidgets.QCheckBox(self.groupBox_cfg_sbar)
-		# self.checkBox_enable_dark_help_icon.setGeometry(QtCore.QRect(240, 18, 130, 20))
-		# self.checkBox_enable_dark_help_icon.setObjectName("checkBox_enable_dark_help_icon")
-		# self.checkBox_enable_dark_help_icon.setText("Enable Dark Help Icon")
-		# self.checkBox_enable_dark_help_icon.toggled.connect(self.parent.enable_dark_help)
-
-
-
-
 
 		self.pushButton_custom_help_icon = QtWidgets.QPushButton(self.groupBox_cfg_sbar)
 		self.pushButton_custom_help_icon.setGeometry(QtCore.QRect(390, 18, 125, 20))
@@ -399,7 +386,8 @@ class MessageBarTestBed(QMainWindow):
 
 		self.app = app
 		self.app.setStyle('Fusion')
-		self.resize(715,430)
+		#self.resize(715,430)
+		self.setFixedSize(715,430)
 
 		self.setuplogging()
 
@@ -443,11 +431,6 @@ class MessageBarTestBed(QMainWindow):
 		# print("ENABLE_SEPARATORS")
 		self.configure_statusbar()
 
-	# def enable_dark_help(self):
-	# 	# print("ENABLE DARK HELP")
-	# 	self._icon_filename = None
-	# 	self.configure_statusbar()
-
 	def help_icon_changed(self):
 		self._icon_filename = None
 		self.configure_statusbar()		
@@ -467,11 +450,6 @@ class MessageBarTestBed(QMainWindow):
 	def configure_statusbar(self):
 		# print("CONFIGURE STATUSBAR")
 
-		# if self.sb_cp.checkBox_enable_dark_help_icon.isChecked():
-		# 	self._enable_dark_help = True
-		# else:
-		# 	self._enable_dark_help = False
-
 		self._built_in_help_icon = self.sb_cp.comboBox_help_icon_style.currentText().split(' ')[0]
 
 		if self.sb_cp.checkBox_enable_seps.isChecked():
@@ -479,13 +457,7 @@ class MessageBarTestBed(QMainWindow):
 		else:
 			self._enable_separators = False
 
-		# print("Enable Seps: {}".format(self._enable_separators))
-		# print("Enable Dark Help Icon: {}".format(self._enable_dark_help))
-		# print("Help Icon File Name: {}".format(self._icon_filename))
-
-
 		self.smartstatusbar = PyQtMessageBar(self, enable_separators=self._enable_separators,
-												#enable_dark_help_icon=self._enable_dark_help,
 												built_in_help_icon = self._built_in_help_icon ,
 												help_icon_file=self._icon_filename,
 												parent_logger_name='TestBed')
@@ -679,12 +651,6 @@ def main():
 	ws = MessageBarTestBed(app=app)
 	ws.show()
 	sys.exit(app.exec_())
-
-
-	# Form = QtWidgets.QWidget()
-	# ui = Ui_Form()
-	# ui.setupUi(Form)
-	# Form.show()
 
 # ----------------------------------------------------------------------------
 # ----------------------------- main -----------------------------------------
