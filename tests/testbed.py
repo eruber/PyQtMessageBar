@@ -431,7 +431,6 @@ class MessageBarTestBed(QMainWindow):
 
 	def setDefaultStatusBar(self):
 		self.smartstatusbar_0 = PyQtMessageBar(self, 
-												parent_logger_name='TestBed',
 												timer_wait_q_emptied_signal=self.timer_wait_queue_empty_signal,
 												)
 
@@ -480,7 +479,6 @@ class MessageBarTestBed(QMainWindow):
 		self.smartstatusbar = PyQtMessageBar(self, enable_separators=self._enable_separators,
 												built_in_help_icon = self._built_in_help_icon ,
 												help_icon_file=self._icon_filename,
-												parent_logger_name='TestBed',
 												timer_wait_q_emptied_signal=self.timer_wait_queue_empty_signal,
 												)
 		self.setStatusBar(self.smartstatusbar)
@@ -670,7 +668,7 @@ class MessageBarTestBed(QMainWindow):
 		self.logger.setLevel(level)
 
 	def setuplogging(self):
-		self.logger = logging.getLogger('TestBed')
+		self.logger = logging.getLogger()
 		self.logger.setLevel(logging.DEBUG)
 		self.ch = logging.StreamHandler()
 		self.ch.setLevel(logging.DEBUG)

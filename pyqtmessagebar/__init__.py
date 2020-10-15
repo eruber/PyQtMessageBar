@@ -14,6 +14,7 @@ LOGGING
 -------
 This module creates a logging handler named 'PyQtMessageBar' and always
 configures a Null handler.
+
 See `Configuring Logging for a Library <https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library>`_.
 
 REFERENCES
@@ -78,6 +79,9 @@ import os
 import queue  # This is a First-In-First-Out Queue
 from datetime import datetime
 import logging
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 # ----------------------------------------------------------------------------
 # -------------------------- Third Party Packages ----------------------------
@@ -174,9 +178,6 @@ class PyQtMessageBar(QStatusBar):
 			This is a string constant that can be one of three values 'Light', 'Dark', 'Two'.
 			Use the module constants BUILT_IN_HELP_ICON_LIGHT, BUILT_IN_HELP_ICON_DARK, or
 			BUILT_IN_HELP_ICON_TWO_TONE.
-		parent_logger_name : str, optional
-			If specified, this logger will be used to enable logging; otherwise,
-			all log calls will go to the Null Handler.
 		save_msg_buffer_dir : str, optional
 			A directory where any saved message buffers will be written to.
 			If specified as None, then saving the message buffer will be
@@ -196,7 +197,6 @@ class PyQtMessageBar(QStatusBar):
 		self._enable_separators   = enable_separators
 		self._help_icon_file      = help_icon_file
 		self._built_in_help_icon  = built_in_help_icon
-		self._parent_loggger_name = parent_logger_name
 		self._save_msg_buffer_dir = save_msg_buffer_dir
 		
 		self._timer_wait_q_emptied_signal = timer_wait_q_emptied_signal
@@ -205,22 +205,12 @@ class PyQtMessageBar(QStatusBar):
 		self._progressbar_delta = None
 		self._timer_progressbar_update = None
 
-		if self._parent_loggger_name:
-			self._logr = logging.getLogger(self._parent_loggger_name + '.PyQtMessageBar')
-		else:
-			self._logr = logging.getLogger('PyQtMessageBar')
-			# This should keep any PyQtMessageBar logging events of warning or above
-			# from being output to stderr if the application using this module
-			# provides no logging support.
-			# See: https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library
-			self._logr.addHandler(logging.NullHandler())	
-
 		self._field_width = len(str(self._buffer_size))
 		format_1 = "{" + "0:0{}d".format(self._field_width) + "}"
 		format_2 = "{" + "1:0{}d".format(self._field_width) + "}"
 		format_3 = " [{2:1d}]" 
 		self._displayed_msg_idx_format = format_1 + "/" + format_2 + format_3	
-		self._logr.debug("Msg Index Format Spec: '{}'".format(self._displayed_msg_idx_format))
+		logger.debug("Msg Index Format Spec: '{}'".format(self._displayed_msg_idx_format))
 
 		self._displayed_msg_idx = -1     # _bufferd_msgs is empty
 		self._buf_page_size     = DEFAULT_PAGE_SIZE
@@ -296,7 +286,7 @@ class PyQtMessageBar(QStatusBar):
 		if self._displayed_msg_idx >= self._buffer_size - 1:
 			# Reached limit of buffer, so we delete the oldest entry
 			entry_to_throw_away = self._bufferd_msgs.pop(0)
-			self._logr.warning("Reached limit of buffer throwing away top entry at idx 0: {}".format(entry_to_throw_away))
+			logger.warning("Reached limit of buffer throwing away top entry at idx 0: {}".format(entry_to_throw_away))
 
 		# unpack the tuple
 		msg, timeout, fg, bg, bold = entry_tuple
@@ -310,7 +300,7 @@ class PyQtMessageBar(QStatusBar):
 
 		self._displayed_msg_idx = self._displayed_msg_idx + 1
 
-		self._logr.warning("At idx: {} Buffered: {}, to:{}, fg:{}, bg:{}, bold:{}, ts:{}".format(self._displayed_msg_idx, msg, timeout, fg, bg, bold, timestamp))
+		logger.warning("At idx: {} Buffered: {}, to:{}, fg:{}, bg:{}, bold:{}, ts:{}".format(self._displayed_msg_idx, msg, timeout, fg, bg, bold, timestamp))
 
 	def _update_msg_idx_label(self):
 		"""Use the _displayed_msg_idx to update the _msg_idx_label widget"""
@@ -321,13 +311,13 @@ class PyQtMessageBar(QStatusBar):
 			return()
 		
 		label_text = self._displayed_msg_idx_format.format(self._displayed_msg_idx, len(self._bufferd_msgs)-1,self._timer_wait_q.qsize())
-		#self._logr.debug("Updating msg index label text: {}".format(label_text))
+		#logger.debug("Updating msg index label text: {}".format(label_text))
 		self._msg_idx_label.setText(label_text)
 		#self._msg_idx_label.setAlignment(Qt.AlignCenter)
 
 	def _clear_msg_idx_label(self):
 		label_text = '-' * (len(str(self._buffer_size)) + 1) + '/' + '-' * (len(str(self._buffer_size)) + 1) + ' [-]'
-		#self._logr.debug("label text: {}".format(label_text))
+		#logger.debug("label text: {}".format(label_text))
 		self._msg_idx_label.setText(label_text)	
 		self._msg_idx_label.setAlignment(Qt.AlignCenter)
 
@@ -424,7 +414,7 @@ class PyQtMessageBar(QStatusBar):
 
 	def _msg_timeout_fired(self, timed_msg=False):
 		"""Remove the widget whose timer fired"""
-		self._logr.debug("SingleShot Timer Fired")
+		logger.debug("SingleShot Timer Fired")
 
 		if self._timer_progressbar_update:
 			self._timer_progressbar_update.stop()
@@ -437,7 +427,7 @@ class PyQtMessageBar(QStatusBar):
 		self._timer = None
 		if not self._timer_wait_q.empty():
 			msg_entry = self._timer_wait_q.get()
-			self._logr.debug("Dequeued waiting message: {}".format(msg_entry[0]))
+			logger.debug("Dequeued waiting message: {}".format(msg_entry[0]))
 			self._buffer_this_entry(msg_entry)
 
 			if self._timer_wait_q.empty():
@@ -456,20 +446,20 @@ class PyQtMessageBar(QStatusBar):
 		msg, timeout, fg, bg, bold = msg_entry
 		self.clearMessage()
 		self._widget = QLabel(msg)
-		self._logr.debug("Displaying & Buffering Msg: {}".format(msg))
+		logger.debug("Displaying & Buffering Msg: {}".format(msg))
 
 		self._format_text(fg, bg, bold)
 
 		if timeout > 0:
-			self._logr.debug("... timeout > 0...")
+			logger.debug("... timeout > 0...")
 			if self._timer is None:
-				self._logr.debug("... no timer running...")
+				logger.debug("... no timer running...")
 				# No currently active timer, so we set one up...
 				# but first lets setup the countdown progressbar if timer is long enough
 				if timeout > 2000: # 2 seconds
-					self._logr.debug("... timer greater than 2 seconds...")
+					logger.debug("... timer greater than 2 seconds...")
 					self._progressbar_delta = 1 / (timeout/1000)
-					self._logr.info("Setting up ProgressBar Timer: {}".format(self._progressbar_delta))
+					logger.info("Setting up ProgressBar Timer: {}".format(self._progressbar_delta))
 					self._msg_idx_label.updateProgress(self._progressbar_delta)
 					self._timer_progressbar_update = QTimer()
 					self._timer_progressbar_update.timeout.connect(self._update_progressbar)
@@ -478,17 +468,17 @@ class PyQtMessageBar(QStatusBar):
 				self._timer = QTimer()
 				self._timer.singleShot(timeout, lambda: self._msg_timeout_fired(timed_msg=True))
 			else:
-				self._logr.debug("... there is a pending timer, so wait queue this msg")
+				logger.debug("... there is a pending timer, so wait queue this msg")
 				# There is a pending timer, so put this message on the wait queue
 				self._timer_wait_q.put((msg, timeout, fg, bg, bold))
 		else:
-			self._logr.debug("... timer = 0, setting up a 1.5 second single shot timer...")
+			logger.debug("... timer = 0, setting up a 1.5 second single shot timer...")
 			# timeout == 0
 			self._process_zero_timeout_timer = QTimer()
 			self._process_zero_timeout_timer.singleShot(1500, lambda: self._msg_timeout_fired(timed_msg=False))
 
 		self._buffer_entry((msg, timeout, fg, bg, bold))
-		self._logr.debug("...adding message widget to statusbar...")
+		logger.debug("...adding message widget to statusbar...")
 		self.addWidget(self._widget, stretch=10)
 		self._update_msg_idx_label()
 
@@ -502,7 +492,7 @@ class PyQtMessageBar(QStatusBar):
 		self._update_msg_idx_label()
 
 	def _save_message_buffer_to_file(self, msg_buffer_file):
-		self._logr.info("Writing message buffer to file '{}'".format(msg_buffer_file))
+		logger.info("Writing message buffer to file '{}'".format(msg_buffer_file))
 		width = len(str(len(self._bufferd_msgs))) + 1
 		fmt = "{" + "0:0{}d".format(width) + "}"
 		idx = 0
@@ -755,14 +745,14 @@ class PyQtMessageBar(QStatusBar):
 					if key == Qt.Key_X:
 						key = self._add_key_modifiers('X')
 						if key == 'control-alt-shift-X':
-							self._logr.debug("Deleting entire message buffer...")
+							logger.debug("Deleting entire message buffer...")
 							self._displayed_msg_idx = -1
 							self._bufferd_msgs.clear()
 							self.clearMessage()
 
 						if key == 'control-alt-X':
 							entry_to_throw_away = self._bufferd_msgs.pop(self._displayed_msg_idx)
-							self._logr.debug("Deleted message @ idx {}: {}".format(self._displayed_msg_idx, entry_to_throw_away))
+							logger.debug("Deleted message @ idx {}: {}".format(self._displayed_msg_idx, entry_to_throw_away))
 							self._move_viewport(0)
 
 					if key == Qt.Key_S:
@@ -860,16 +850,16 @@ class PyQtMessageBar(QStatusBar):
 		"""
 		# pad msg with a leading space...
 		msg = ' ' + msg
-		self._logr.debug("showMessage called...")
+		logger.debug("showMessage called...")
 		if self._widget:
-			self._logr.debug("msg widget already being displayed...")
+			logger.debug("msg widget already being displayed...")
 			# There is a msg being displayed...
 			# If there are other pending messages that have not yet been displayed,
 			# we enqueue this message to the wait queue.
 			# If msg being displayed has no timeout, we clear it and show this msg.
 
 			if self._timer:
-				self._logr.debug("Wait Queueing message: '{}'".format(msg))
+				logger.debug("Wait Queueing message: '{}'".format(msg))
 				# We are waiting the currently diplayed message to timeout,
 				# or we have older pending messages that have not yet been displayed;
 				# so put this message on the wait queue
@@ -877,15 +867,15 @@ class PyQtMessageBar(QStatusBar):
 
 				return()
 			else:
-				self._logr.debug("No wait Q timer running...")
+				logger.debug("No wait Q timer running...")
 
 		# No message being displayed, however, we may have previous message in the wait queue
 		# being processed by the singleShot Timer; only if the wait queue is empty do we
 		# process the caller's message; otherwise, we put it on the wait queue.
 		if self._timer_wait_q.empty():
-			self._logr.debug("Wait Q empty, clear displayed message and buffer new msg.")
+			logger.debug("Wait Q empty, clear displayed message and buffer new msg.")
 			# self.clearMessage() -->> This is called first thing in _buffer_this_entry() below
 			self._buffer_this_entry((msg, timeout, fg, bg, bold))
 		else:
-			self._logr.debug("Wait Q NOT empty, enqueue current message...")
+			logger.debug("Wait Q NOT empty, enqueue current message...")
 			self._enqueue_to_wait_q(msg, timeout, fg, bg, bold)
