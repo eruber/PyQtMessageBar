@@ -164,6 +164,7 @@
 <span class="sd">-------</span>
 <span class="sd">This module creates a logging handler named &#39;PyQtMessageBar&#39; and always</span>
 <span class="sd">configures a Null handler.</span>
+
 <span class="sd">See `Configuring Logging for a Library &lt;https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library&gt;`_.</span>
 
 <span class="sd">REFERENCES</span>
@@ -228,6 +229,9 @@
 <span class="kn">import</span> <span class="nn">queue</span>  <span class="c1"># This is a First-In-First-Out Queue</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>
 
 <span class="c1"># ----------------------------------------------------------------------------</span>
 <span class="c1"># -------------------------- Third Party Packages ----------------------------</span>
@@ -324,9 +328,6 @@
 <span class="sd">			This is a string constant that can be one of three values &#39;Light&#39;, &#39;Dark&#39;, &#39;Two&#39;.</span>
 <span class="sd">			Use the module constants BUILT_IN_HELP_ICON_LIGHT, BUILT_IN_HELP_ICON_DARK, or</span>
 <span class="sd">			BUILT_IN_HELP_ICON_TWO_TONE.</span>
-<span class="sd">		parent_logger_name : str, optional</span>
-<span class="sd">			If specified, this logger will be used to enable logging; otherwise,</span>
-<span class="sd">			all log calls will go to the Null Handler.</span>
 <span class="sd">		save_msg_buffer_dir : str, optional</span>
 <span class="sd">			A directory where any saved message buffers will be written to.</span>
 <span class="sd">			If specified as None, then saving the message buffer will be</span>
@@ -346,7 +347,6 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_enable_separators</span>   <span class="o">=</span> <span class="n">enable_separators</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_help_icon_file</span>      <span class="o">=</span> <span class="n">help_icon_file</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_built_in_help_icon</span>  <span class="o">=</span> <span class="n">built_in_help_icon</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_parent_loggger_name</span> <span class="o">=</span> <span class="n">parent_logger_name</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_save_msg_buffer_dir</span> <span class="o">=</span> <span class="n">save_msg_buffer_dir</span>
 		
 		<span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q_emptied_signal</span> <span class="o">=</span> <span class="n">timer_wait_q_emptied_signal</span>
@@ -355,22 +355,12 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span> <span class="o">=</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span> <span class="o">=</span> <span class="kc">None</span>
 
-		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent_loggger_name</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent_loggger_name</span> <span class="o">+</span> <span class="s1">&#39;.PyQtMessageBar&#39;</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;PyQtMessageBar&#39;</span><span class="p">)</span>
-			<span class="c1"># This should keep any PyQtMessageBar logging events of warning or above</span>
-			<span class="c1"># from being output to stderr if the application using this module</span>
-			<span class="c1"># provides no logging support.</span>
-			<span class="c1"># See: https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>	
-
 		<span class="bp">self</span><span class="o">.</span><span class="n">_field_width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">))</span>
 		<span class="n">format_1</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="s2">&quot;0:0</span><span class="si">{}</span><span class="s2">d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field_width</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
 		<span class="n">format_2</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="s2">&quot;1:0</span><span class="si">{}</span><span class="s2">d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field_width</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
 		<span class="n">format_3</span> <span class="o">=</span> <span class="s2">&quot; [</span><span class="si">{2:1d}</span><span class="s2">]&quot;</span> 
 		<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx_format</span> <span class="o">=</span> <span class="n">format_1</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">format_2</span> <span class="o">+</span> <span class="n">format_3</span>	
-		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Msg Index Format Spec: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx_format</span><span class="p">))</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Msg Index Format Spec: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx_format</span><span class="p">))</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>     <span class="c1"># _bufferd_msgs is empty</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_buf_page_size</span>     <span class="o">=</span> <span class="n">DEFAULT_PAGE_SIZE</span>
@@ -446,7 +436,7 @@
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
 			<span class="c1"># Reached limit of buffer, so we delete the oldest entry</span>
 			<span class="n">entry_to_throw_away</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Reached limit of buffer throwing away top entry at idx 0: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">entry_to_throw_away</span><span class="p">))</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Reached limit of buffer throwing away top entry at idx 0: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">entry_to_throw_away</span><span class="p">))</span>
 
 		<span class="c1"># unpack the tuple</span>
 		<span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span> <span class="o">=</span> <span class="n">entry_tuple</span>
@@ -460,7 +450,7 @@
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">+</span> <span class="mi">1</span>
 
-		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;At idx: </span><span class="si">{}</span><span class="s2"> Buffered: </span><span class="si">{}</span><span class="s2">, to:</span><span class="si">{}</span><span class="s2">, fg:</span><span class="si">{}</span><span class="s2">, bg:</span><span class="si">{}</span><span class="s2">, bold:</span><span class="si">{}</span><span class="s2">, ts:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;At idx: </span><span class="si">{}</span><span class="s2"> Buffered: </span><span class="si">{}</span><span class="s2">, to:</span><span class="si">{}</span><span class="s2">, fg:</span><span class="si">{}</span><span class="s2">, bg:</span><span class="si">{}</span><span class="s2">, bold:</span><span class="si">{}</span><span class="s2">, ts:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
 
 	<span class="k">def</span> <span class="nf">_update_msg_idx_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Use the _displayed_msg_idx to update the _msg_idx_label widget&quot;&quot;&quot;</span>
@@ -471,13 +461,13 @@
 			<span class="k">return</span><span class="p">()</span>
 		
 		<span class="n">label_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">qsize</span><span class="p">())</span>
-		<span class="c1">#self._logr.debug(&quot;Updating msg index label text: {}&quot;.format(label_text))</span>
+		<span class="c1">#logger.debug(&quot;Updating msg index label text: {}&quot;.format(label_text))</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">label_text</span><span class="p">)</span>
 		<span class="c1">#self._msg_idx_label.setAlignment(Qt.AlignCenter)</span>
 
 	<span class="k">def</span> <span class="nf">_clear_msg_idx_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="n">label_text</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; [-]&#39;</span>
-		<span class="c1">#self._logr.debug(&quot;label text: {}&quot;.format(label_text))</span>
+		<span class="c1">#logger.debug(&quot;label text: {}&quot;.format(label_text))</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">label_text</span><span class="p">)</span>	
 		<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
 
@@ -574,7 +564,7 @@
 
 	<span class="k">def</span> <span class="nf">_msg_timeout_fired</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timed_msg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Remove the widget whose timer fired&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SingleShot Timer Fired&quot;</span><span class="p">)</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SingleShot Timer Fired&quot;</span><span class="p">)</span>
 
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
@@ -587,7 +577,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="kc">None</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
 			<span class="n">msg_entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Dequeued waiting message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Dequeued waiting message: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_this_entry</span><span class="p">(</span><span class="n">msg_entry</span><span class="p">)</span>
 
 			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
@@ -606,20 +596,20 @@
 		<span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span> <span class="o">=</span> <span class="n">msg_entry</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_widget</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Displaying &amp; Buffering Msg: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Displaying &amp; Buffering Msg: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">_format_text</span><span class="p">(</span><span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span>
 
 		<span class="k">if</span> <span class="n">timeout</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timeout &gt; 0...&quot;</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timeout &gt; 0...&quot;</span><span class="p">)</span>
 			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... no timer running...&quot;</span><span class="p">)</span>
+				<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... no timer running...&quot;</span><span class="p">)</span>
 				<span class="c1"># No currently active timer, so we set one up...</span>
 				<span class="c1"># but first lets setup the countdown progressbar if timer is long enough</span>
 				<span class="k">if</span> <span class="n">timeout</span> <span class="o">&gt;</span> <span class="mi">2000</span><span class="p">:</span> <span class="c1"># 2 seconds</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timer greater than 2 seconds...&quot;</span><span class="p">)</span>
+					<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timer greater than 2 seconds...&quot;</span><span class="p">)</span>
 					<span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">timeout</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Setting up ProgressBar Timer: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span><span class="p">))</span>
+					<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Setting up ProgressBar Timer: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span><span class="p">))</span>
 					<span class="bp">self</span><span class="o">.</span><span class="n">_msg_idx_label</span><span class="o">.</span><span class="n">updateProgress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_progressbar_delta</span><span class="p">)</span>
 					<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
 					<span class="bp">self</span><span class="o">.</span><span class="n">_timer_progressbar_update</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_progressbar</span><span class="p">)</span>
@@ -628,17 +618,17 @@
 				<span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_timeout_fired</span><span class="p">(</span><span class="n">timed_msg</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 			<span class="k">else</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... there is a pending timer, so wait queue this msg&quot;</span><span class="p">)</span>
+				<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... there is a pending timer, so wait queue this msg&quot;</span><span class="p">)</span>
 				<span class="c1"># There is a pending timer, so put this message on the wait queue</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">))</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timer = 0, setting up a 1.5 second single shot timer...&quot;</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;... timer = 0, setting up a 1.5 second single shot timer...&quot;</span><span class="p">)</span>
 			<span class="c1"># timeout == 0</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_process_zero_timeout_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_process_zero_timeout_timer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_timeout_fired</span><span class="p">(</span><span class="n">timed_msg</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_entry</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">))</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;...adding message widget to statusbar...&quot;</span><span class="p">)</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;...adding message widget to statusbar...&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_update_msg_idx_label</span><span class="p">()</span>
 
@@ -652,7 +642,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_update_msg_idx_label</span><span class="p">()</span>
 
 	<span class="k">def</span> <span class="nf">_save_message_buffer_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_buffer_file</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing message buffer to file &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg_buffer_file</span><span class="p">))</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing message buffer to file &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg_buffer_file</span><span class="p">))</span>
 		<span class="n">width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span>
 		<span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="s2">&quot;0:0</span><span class="si">{}</span><span class="s2">d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
 		<span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
@@ -905,14 +895,14 @@
 					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_X</span><span class="p">:</span>
 						<span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_key_modifiers</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
 						<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;control-alt-shift-X&#39;</span><span class="p">:</span>
-							<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleting entire message buffer...&quot;</span><span class="p">)</span>
+							<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleting entire message buffer...&quot;</span><span class="p">)</span>
 							<span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 							<span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 							<span class="bp">self</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span>
 
 						<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;control-alt-X&#39;</span><span class="p">:</span>
 							<span class="n">entry_to_throw_away</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bufferd_msgs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">)</span>
-							<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleted message @ idx </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="n">entry_to_throw_away</span><span class="p">))</span>
+							<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleted message @ idx </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_displayed_msg_idx</span><span class="p">,</span> <span class="n">entry_to_throw_away</span><span class="p">))</span>
 							<span class="bp">self</span><span class="o">.</span><span class="n">_move_viewport</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 					<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_S</span><span class="p">:</span>
@@ -1010,16 +1000,16 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="c1"># pad msg with a leading space...</span>
 		<span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">msg</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;showMessage called...&quot;</span><span class="p">)</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;showMessage called...&quot;</span><span class="p">)</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;msg widget already being displayed...&quot;</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;msg widget already being displayed...&quot;</span><span class="p">)</span>
 			<span class="c1"># There is a msg being displayed...</span>
 			<span class="c1"># If there are other pending messages that have not yet been displayed,</span>
 			<span class="c1"># we enqueue this message to the wait queue.</span>
 			<span class="c1"># If msg being displayed has no timeout, we clear it and show this msg.</span>
 
 			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Queueing message: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+				<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Queueing message: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
 				<span class="c1"># We are waiting the currently diplayed message to timeout,</span>
 				<span class="c1"># or we have older pending messages that have not yet been displayed;</span>
 				<span class="c1"># so put this message on the wait queue</span>
@@ -1027,17 +1017,17 @@
 
 				<span class="k">return</span><span class="p">()</span>
 			<span class="k">else</span><span class="p">:</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No wait Q timer running...&quot;</span><span class="p">)</span>
+				<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No wait Q timer running...&quot;</span><span class="p">)</span>
 
 		<span class="c1"># No message being displayed, however, we may have previous message in the wait queue</span>
 		<span class="c1"># being processed by the singleShot Timer; only if the wait queue is empty do we</span>
 		<span class="c1"># process the caller&#39;s message; otherwise, we put it on the wait queue.</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer_wait_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q empty, clear displayed message and buffer new msg.&quot;</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q empty, clear displayed message and buffer new msg.&quot;</span><span class="p">)</span>
 			<span class="c1"># self.clearMessage() --&gt;&gt; This is called first thing in _buffer_this_entry() below</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_buffer_this_entry</span><span class="p">((</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">))</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">_logr</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q NOT empty, enqueue current message...&quot;</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wait Q NOT empty, enqueue current message...&quot;</span><span class="p">)</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">_enqueue_to_wait_q</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">bold</span><span class="p">)</span></div></div>
 </pre></div>
 

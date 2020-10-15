@@ -182,8 +182,8 @@ a drop-in replacement for QStatusBar.</p>
 <div class="section" id="logging">
 <h3>LOGGING<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h3>
 <p>This module creates a logging handler named ‘PyQtMessageBar’ and always
-configures a Null handler.
-See <a class="reference external" href="https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library">Configuring Logging for a Library</a>.</p>
+configures a Null handler.</p>
+<p>See <a class="reference external" href="https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library">Configuring Logging for a Library</a>.</p>
 <p class="rubric">References</p>
 <dl class="simple">
 <dt>The following Qt references proved helpful:</dt><dd><ul class="simple">
@@ -259,8 +259,6 @@ this icon will have prescedence over any built-in icon.</p></li>
 <li><p><strong>built_in_help_icon</strong> (<em>str</em><em>, </em><em>optional</em>) – This is a string constant that can be one of three values ‘Light’, ‘Dark’, ‘Two’.
 Use the module constants BUILT_IN_HELP_ICON_LIGHT, BUILT_IN_HELP_ICON_DARK, or
 BUILT_IN_HELP_ICON_TWO_TONE.</p></li>
-<li><p><strong>parent_logger_name</strong> (<em>str</em><em>, </em><em>optional</em>) – If specified, this logger will be used to enable logging; otherwise,
-all log calls will go to the Null Handler.</p></li>
 <li><p><strong>save_msg_buffer_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – A directory where any saved message buffers will be written to.
 If specified as None, then saving the message buffer will be
 disabled.</p></li>
@@ -432,11 +430,6 @@ we can add the ability to insert a separator if so enabled.</p>
 there is no currently dislayed message.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt id="pyqtmessagebar.__init__.PyQtMessageBar.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'pyqtmessagebar.__init__'</em><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt id="pyqtmessagebar.__init__.PyQtMessageBar.showMessage">
 <code class="sig-name descname">showMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">fg</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bg</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bold</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyqtmessagebar/__init__.html#PyQtMessageBar.showMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.showMessage" title="Permalink to this definition">¶</a></dt>
@@ -468,6 +461,11 @@ If not specified, the system default color is used.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py attribute">
+<dt id="pyqtmessagebar.__init__.PyQtMessageBar.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'pyqtmessagebar.__init__'</em><a class="headerlink" href="#pyqtmessagebar.__init__.PyQtMessageBar.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
